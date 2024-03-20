@@ -184,7 +184,6 @@ while true
 do
 	while true
 	do
-		rm -rf rtt rtt.txt log.txt speed.txt ipstemp.txt
 		mkdir rtt
 		echo "正在生成 $ips"
 		cp $fileips ipstemp.txt
@@ -290,7 +289,6 @@ bandwidth=5  #设置带宽
 tasknum=20   #设置多线程
 ips=ipv4    #设置类型
 tls=0    #是否使用https
-rm -rf rtt rtt.txt log.txt speed.txt
 clear
 echo "缓存已经清空"
 while (true)
@@ -303,6 +301,8 @@ else
 	break
 fi
 done
+#清理缓存
+rm -rf rtt rtt.txt log.txt speed.txt ipstemp.txt
 #----------------------------------------------------------------------------------------------
 #开始整理config.yaml配置文件并提取代理合并入文件
 echo --$date-- "开始整理配置文件并提取代理" |tee -a /tmp/cf.log
