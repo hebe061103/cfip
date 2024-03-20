@@ -258,7 +258,7 @@ do
 				then
 					let ipcfnum++
 					anycast=$ip
-					echo "$ip:峰值速度$ip $max KB/s" |tee -a cfiplist
+					echo "$ip:峰值速度|$ip|$max KB/s" |tee -a cfiplist
 					if [ $ipcfnum -eq 5 ]
 					then
 						status=1
