@@ -184,23 +184,25 @@ while true
 do
 	while true
 	do
-		rm -rf rtt rtt.txt log.txt speed.txt
+		rm -rf rtt rtt.txt log.txt speed.txt ipstemp.txt
 		mkdir rtt
 		echo "正在生成 $ips"
+		cp $fileips ipstemp.txt
 		unset temp
 		n=1
-		for filename in $(ls ./JP.txt)
+		while [ -s "ipstemp.txt" ] # -s if file not empty
                 do
-                     while read line
-                     do
-                        echo $line>>rtt/$n.txt
+                  numip=`grep -c '' ipstemp.txt`
+                  random=`echo $((RANDOM % $numip + 1))`
+                  x=`sed -n "$random"p ipstemp.txt`
+                  echo $x >> rtt/$n.txt
+                  sed -i "$random"d ipstemp.txt
 			if [ $n == $tasknum ]
 			then
 				n=1
 			else
 				n=$[$n+1]
 			fi
-                     done < $filename
                 done
 		n=1
 		while true
@@ -256,7 +258,7 @@ do
 				then
 					let ipcfnum++
 					anycast=$ip
-					echo "$ip:峰值速度$ipcfnum $max KB/s" |tee -a cfiplist
+					echo "$ip:峰值速度$ip $max KB/s" |tee -a cfiplist
 					if [ $ipcfnum -eq 5 ]
 					then
 						status=1
@@ -283,10 +285,10 @@ echo "" > cfiplist
 url=$(sed -n '1p' url.txt)
 domain=$(echo $url | cut -f 1 -d'/')
 file=$(echo $url | cut -f 2- -d'/')
+fileips=JP500.txt
 bandwidth=5  #设置带宽
-tasknum=10   #设置多线程
+tasknum=20   #设置多线程
 ips=ipv4    #设置类型
-filename=ips-v4.txt
 tls=0    #是否使用https
 rm -rf rtt rtt.txt log.txt speed.txt
 clear
