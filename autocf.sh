@@ -188,20 +188,84 @@ do
 		mkdir rtt
 		echo "正在生成 $ips"
 		unset temp
+		if [ "$ips" == "ipv4" ]
+		then
+			n=0
+			iplist=100
+			while true
+			do
+				for i in `awk 'BEGIN{srand()} {print rand()"\t"$0}' $filename | sort -n | awk '{print $2} NR=='$iplist' {exit}' | awk -F\. '{print $1"."$2"."$3}'`
+				do
+					temp[$n]=$(echo $i.$(($RANDOM%256)))
+					n=$[$n+1]
+				done
+				if [ $n -ge $iplist ]
+				then
+					break
+				fi
+			done
+			while true
+			do
+				if [ $(echo ${temp[@]} | sed -e 's/ /\n/g' | sort -u | wc -l) -ge $iplist ]
+				then
+					break
+				else
+					for i in `awk 'BEGIN{srand()} {print rand()"\t"$0}' $filename | sort -n | awk '{print $2} NR=='$[$iplist-$(echo ${temp[@]} | sed -e 's/ /\n/g' | sort -u | wc -l)]' {exit}' | awk -F\. '{print $1"."$2"."$3}'`
+					do
+						temp[$n]=$(echo $i.$(($RANDOM%256)))
+						n=$[$n+1]
+					done
+				fi
+			done
+		else
+			n=0
+			iplist=100
+			while true
+			do
+				for i in `awk 'BEGIN{srand()} {print rand()"\t"$0}' $filename | sort -n | awk '{print $2} NR=='$iplist' {exit}' | awk -F: '{print $1":"$2":"$3}'`
+				do
+					temp[$n]=$(echo $i:$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))))
+					n=$[$n+1]
+				done
+				if [ $n -ge $iplist ]
+				then
+					break
+				fi
+			done
+			while true
+			do
+				if [ $(echo ${temp[@]} | sed -e 's/ /\n/g' | sort -u | wc -l) -ge $iplist ]
+				then
+					break
+				else
+					for i in `awk 'BEGIN{srand()} {print rand()"\t"$0}' $filename | sort -n | awk '{print $2} NR=='$[$iplist-$(echo ${temp[@]} | sed -e 's/ /\n/g' | sort -u | wc -l)]' {exit}' | awk -F: '{print $1":"$2":"$3}'`
+					do
+						temp[$n]=$(echo $i:$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))))
+						n=$[$n+1]
+					done
+				fi
+			done
+		fi
+		ipnum=$(echo ${temp[@]} | sed -e 's/ /\n/g' | sort -u | wc -l)
+		if [ $tasknum == 0 ]
+		then
+			tasknum=1
+		fi
+		if [ $ipnum -lt $tasknum ]
+		then
+			tasknum=$ipnum
+		fi
 		n=1
-		for filename in $(ls ./JP.txt)
-                do
-                     while read line
-                     do
-                        echo $line>>rtt/$n.txt
+		for i in `echo ${temp[@]} | sed -e 's/ /\n/g' | sort -u`
+		do
+			echo $i>>rtt/$n.txt
 			if [ $n == $tasknum ]
 			then
 				n=1
 			else
 				n=$[$n+1]
 			fi
-                     done < $filename
-                done
+		done
 		n=1
 		while true
 		do
