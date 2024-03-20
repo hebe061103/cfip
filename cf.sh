@@ -240,8 +240,8 @@ do
 		else
 			cat rtt/*.log > rtt.txt
 			echo "待测速的IP地址"
-			cat rtt.txt | sort | awk '{print $2" 往返延迟 "$1" 毫秒"}'
-			for i in `cat rtt.txt | sort | awk '{print $1"_"$2}'`
+			cat rtt.txt | awk '{print $2" 往返延迟 "$1" 毫秒"}'
+			for i in `cat rtt.txt | awk '{print $1"_"$2}'`
 			do
 				avgms=$(echo $i | awk -F_ '{print $1}')
 				ip=$(echo $i | awk -F_ '{print $2}')
