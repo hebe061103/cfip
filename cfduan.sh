@@ -186,23 +186,85 @@ do
 	do
 		mkdir rtt
 		echo "正在生成 $ips"
-		cp $fileips ipstemp.txt
 		unset temp
+		if [ "$ips" == "ipv4" ]
+		then
+			n=0
+			iplist=100
+			while true
+			do
+				for i in `awk 'BEGIN{srand()} {print rand()"\t"$0}' $filename | sort -n | awk '{print $2} NR=='$iplist' {exit}' | awk -F\. '{print $1"."$2"."$3}'`
+				do
+					temp[$n]=$(echo $i.$(($RANDOM%256)))
+					n=$[$n+1]
+				done
+				if [ $n -ge $iplist ]
+				then
+					break
+				fi
+			done
+			while true
+			do
+				if [ $(echo ${temp[@]} | sed -e 's/ /\n/g' | sort -u | wc -l) -ge $iplist ]
+				then
+					break
+				else
+					for i in `awk 'BEGIN{srand()} {print rand()"\t"$0}' $filename | sort -n | awk '{print $2} NR=='$[$iplist-$(echo ${temp[@]} | sed -e 's/ /\n/g' | sort -u | wc -l)]' {exit}' | awk -F\. '{print $1"."$2"."$3}'`
+					do
+						temp[$n]=$(echo $i.$(($RANDOM%256)))
+						n=$[$n+1]
+					done
+				fi
+			done
+		else
+			n=0
+			iplist=100
+			while true
+			do
+				for i in `awk 'BEGIN{srand()} {print rand()"\t"$0}' $filename | sort -n | awk '{print $2} NR=='$iplist' {exit}' | awk -F: '{print $1":"$2":"$3}'`
+				do
+					temp[$n]=$(echo $i:$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))))
+					n=$[$n+1]
+				done
+				if [ $n -ge $iplist ]
+				then
+					break
+				fi
+			done
+			while true
+			do
+				if [ $(echo ${temp[@]} | sed -e 's/ /\n/g' | sort -u | wc -l) -ge $iplist ]
+				then
+					break
+				else
+					for i in `awk 'BEGIN{srand()} {print rand()"\t"$0}' $filename | sort -n | awk '{print $2} NR=='$[$iplist-$(echo ${temp[@]} | sed -e 's/ /\n/g' | sort -u | wc -l)]' {exit}' | awk -F: '{print $1":"$2":"$3}'`
+					do
+						temp[$n]=$(echo $i:$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))))
+						n=$[$n+1]
+					done
+				fi
+			done
+		fi
+		ipnum=$(echo ${temp[@]} | sed -e 's/ /\n/g' | sort -u | wc -l)
+		if [ $tasknum == 0 ]
+		then
+			tasknum=1
+		fi
+		if [ $ipnum -lt $tasknum ]
+		then
+			tasknum=$ipnum
+		fi
 		n=1
-		while [ -s "ipstemp.txt" ] # -s if file not empty
-                do
-                  numip=`grep -c '' ipstemp.txt`
-                  random=`echo $((RANDOM % $numip + 1))`
-                  x=`sed -n "$random"p ipstemp.txt`
-                  echo $x >> rtt/$n.txt
-                  sed -i "$random"d ipstemp.txt
+		for i in `echo ${temp[@]} | sed -e 's/ /\n/g' | sort -u`
+		do
+			echo $i>>rtt/$n.txt
 			if [ $n == $tasknum ]
 			then
 				n=1
 			else
 				n=$[$n+1]
 			fi
-                done
+		done
 		n=1
 		while true
 		do
@@ -239,8 +301,8 @@ do
 		else
 			cat rtt/*.log > rtt.txt
 			echo "待测速的IP地址"
-			cat rtt.txt | awk '{print $2" 往返延迟 "$1" 毫秒"}'
-			for i in `cat rtt.txt | awk '{print $1"_"$2}'`
+			cat rtt.txt | sort | awk '{print $2" 往返延迟 "$1" 毫秒"}'
+			for i in `cat rtt.txt | sort | awk '{print $1"_"$2}'`
 			do
 				avgms=$(echo $i | awk -F_ '{print $1}')
 				ip=$(echo $i | awk -F_ '{print $2}')
@@ -257,7 +319,7 @@ do
 				then
 					let ipcfnum++
 					anycast=$ip
-					echo "$ip:峰值速度$ipcfnum|$ip|$max KB/s" |tee -a cfiplist
+					echo "$ip:峰值速度$ipcfnum| $max KB/s" |tee -a cfiplist
 					if [ $ipcfnum -eq 5 ]
 					then
 						status=1
@@ -284,14 +346,13 @@ echo "" > cfiplist
 url=$(sed -n '1p' url.txt)
 domain=$(echo $url | cut -f 1 -d'/')
 file=$(echo $url | cut -f 2- -d'/')
-fileips=JP500.txt
 bandwidth=5  #设置带宽
-tasknum=20   #设置多线程
+tasknum=10   #设置多线程
 ips=ipv4    #设置类型
+filename=ips-v4.txt
 tls=0    #是否使用https
+rm -rf rtt rtt.txt log.txt speed.txt
 clear
-#清理缓存
-rm -rf rtt rtt.txt log.txt speed.txt ipstemp.txt
 echo "缓存已经清空"
 while (true)
 do
