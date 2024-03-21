@@ -280,6 +280,8 @@ done
 parm_path=$(cd `dirname $0`; pwd)
 killall -9 mihomo
 cd $parm_path
+#清理缓存
+rm -rf rtt rtt.txt log.txt speed.txt ipstemp.txt
 echo "" > cfiplist
 url=$(sed -n '1p' url.txt)
 domain=$(echo $url | cut -f 1 -d'/')
@@ -301,8 +303,6 @@ else
 	break
 fi
 done
-#清理缓存
-rm -rf rtt rtt.txt log.txt speed.txt ipstemp.txt
 #----------------------------------------------------------------------------------------------
 #开始整理config.yaml配置文件并提取代理合并入文件
 echo --$date-- "开始整理配置文件并提取代理" |tee -a /tmp/cf.log
