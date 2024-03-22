@@ -1,10 +1,7 @@
-port: 7890
 socks-port: 7891
 allow-lan: true
 mode: Rule
 log-level: info
-external-controller: 0.0.0.0:9090
-external-ui: /usr/local/clash/ui
 #TCP并发连接将使用所有IP进行TCP握手，并使用最先握手的IP进行后续请求,默认为false
 tcp-concurrent: true
 # DNS服务器
@@ -18,16 +15,13 @@ dns:
   listen: 0.0.0.0:9053
   fake-ip-range: 12.0.0.1/16
 proxies:
-  - {name: vmess+ws|Q7WR.love@xray.com, server: jp-osaka-oracle-d9311f.ip1.shop, port: 49853, type: vmess, uuid: 24f8ce85-857b-4297-8756-e99d776810df, alterId: 0, cipher: auto, tls: false, network: ws, ws-opts: {path: /24f8ce85, headers: {Host: jp-osaka-oracle-d9311f.ip1.shop}}}
   # 以上为代理地址请插入
 proxy-groups:
   - name: 🚀 节点选择
     type: select
     proxies:
       - ♻️  自动选择
-      - ⚖️  负载均衡-轮询
       - 📢  负载均衡-散列
-      - 🎯  自建VPS私密
       # 以上为节点选择组的自动选择代理请插入
   - name: ♻️  自动选择
     type: url-test
@@ -35,13 +29,6 @@ proxy-groups:
     interval: 300
     proxies:
       # 以上为自动选择组下面的代理地址请插入
-  - name: ⚖️  负载均衡-轮询
-    type: load-balance
-    url: http://www.google.com/generate_204
-    interval: 300
-    strategy: round-robin
-    proxies:
-      # 以上为轮询组下面的代理地址请插入
   - name: 📢  负载均衡-散列
     type: load-balance
     url: http://www.google.com/generate_204
@@ -49,17 +36,5 @@ proxy-groups:
     strategy: consistent-hashing
     proxies:
       # 以上为散列组下面的代理地址请插入
-  - name: 🎯  自建VPS私密
-    type: url-test
-    url: http://www.gstatic.com/generate_204
-    interval: 300
-    proxies:
-      - vmess+ws|Q7WR.love@xray.com
 rules:
- - DOMAIN-SUFFIX,okx.com,🎯  自建VPS私密
- - DOMAIN-SUFFIX,bybit.com,🎯  自建VPS私密
- - DOMAIN-SUFFIX,binance.com,🎯  自建VPS私密
- - DOMAIN-SUFFIX,youtube.com,🎯  自建VPS私密
- - DOMAIN-SUFFIX,3commas.io,🎯  自建VPS私密
- - DOMAIN-SUFFIX,kucoin.com,🎯  自建VPS私密
- - MATCH,🚀 节点选择
+ - MATCH, 📢  负载均衡-散列
