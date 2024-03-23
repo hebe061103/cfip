@@ -3,49 +3,47 @@
 
 function bettercloudflareip(){
 speed=$[$bandwidth*1024]
-starttime=$(date +%s)
 cloudflaretest
-endtime=$(date +%s)
 unset temp
-if [ "$ips" == "ipv4" ]
-then
-	if [ $tls == 1 ]
-	then
-		temp=($(curl --resolve $domain:443:$anycast --retry 1 -s https://$domain/cdn-cgi/trace --connect-timeout 2 --max-time 3))
-	else
-		temp=($(curl -x $anycast:80 --retry 1 -s http://$domain/cdn-cgi/trace --connect-timeout 2 --max-time 3))
-	fi
-else
-	if [ $tls == 1 ]
-	then
-		temp=($(curl --resolve $domain:443:$anycast --retry 1 -s https://$domain/cdn-cgi/trace --connect-timeout 2 --max-time 3))
-	else
-		temp=($(curl -x [$anycast]:80 --retry 1 -s http://$domain/cdn-cgi/trace --connect-timeout 2 --max-time 3))
-	fi
-fi
-if [ $(echo ${temp[@]} | sed -e 's/ /\n/g' | grep colo= | wc -l) == 0 ]
-then
-	publicip=获取超时
-	colo=获取超时
-else
-	publicip=$(echo ${temp[@]} | sed -e 's/ /\n/g' | grep ip= | cut -f 2- -d'=')
-	colo=$(grep -w "($(echo ${temp[@]} | sed -e 's/ /\n/g' | grep colo= | cut -f 2- -d'='))" colo.txt | awk -F"-" '{print $1}')
-fi
 clear
-echo "优选IP $anycast"
-echo "公网IP $publicip"
+echo "优选IP"
+for I in ${#anycast[@]};do
+    if [ "$ips" == "ipv4" ]
+        then
+		if [ $tls == 1 ]
+		then
+			temp=($(curl --resolve $domain:443:${anycast[$I]} --retry 1 -s https://$domain/cdn-cgi/trace --connect-timeout 2 --max-time 3))
+		else
+			temp=($(curl -x ${anycast[$I]}:80 --retry 1 -s http://$domain/cdn-cgi/trace --connect-timeout 2 --max-time 3))
+		fi
+        else
+		if [ $tls == 1 ]
+		then
+			temp=($(curl --resolve $domain:443:${anycast[$I]} --retry 1 -s https://$domain/cdn-cgi/trace --connect-timeout 2 --max-time 3))
+		else
+			temp=($(curl -x ${anycast[$I]}:80 --retry 1 -s http://$domain/cdn-cgi/trace --connect-timeout 2 --max-time 3))
+		fi
+        fi
+        
+	if [ $(echo ${temp[@]} | sed -e 's/ /\n/g' | grep colo= | wc -l) == 0 ]
+	then
+		publicip=获取超时
+		colo=获取超时
+	else
+		publicip=$(echo ${temp[@]} | sed -e 's/ /\n/g' | grep ip= | cut -f 2- -d'=')
+		colo=$(grep -w "($(echo ${temp[@]} | sed -e 's/ /\n/g' | grep colo= | cut -f 2- -d'='))" colo.txt | awk -F"-" '{print $1}')
+	fi
+    
+    
+        echo "${remarks_array[$I]}|设置带宽 $bandwidth Mbps|实测带宽 ${realbandwidth[$I]} Mbps|峰值速度 ${maxl[$I]} kB/s|往返延迟 ${avgmsl[$I]} 毫秒|数据中心 $colo|公网IP $publicip"
+done
+
 if [ $tls == 1 ]
 then
 	echo "支持端口 443 2053 2083 2087 2096 8443"
 else
 	echo "支持端口 80 8080 8880 2052 2082 2086 2095"
 fi
-echo "设置带宽 $bandwidth Mbps"
-echo "实测带宽 $realbandwidth Mbps"
-echo "峰值速度 $max kB/s"
-echo "往返延迟 $avgms 毫秒"
-echo "数据中心 $colo"
-echo "总计用时 $[$endtime-$starttime] 秒"
 }
 
 function rtthttps(){
@@ -336,7 +334,10 @@ do
 				if [ $max -gt $speed ]
 				then
 					let ipcfnum++
-					anycast=$ip
+					anycast[$ipcfnum]=$ip
+					realbandwidth[$ipcfnum]=$[$max/128]
+					maxl[$ipcfnum]=$max
+					avgmsl[$ipcfnum]=$avgms
 					echo "$ip:峰值速度$ipcfnum|$max KB/s" |tee -a cfiplist
 					if [ $ipcfnum -eq 5 ]
 					then
