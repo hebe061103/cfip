@@ -6,7 +6,6 @@ speed=$[$bandwidth*1024]
 cloudflaretest
 unset temp
 echo "优选IP"
-echo "${anycast[@]}"
 for (( i=0; i<${#anycast[@]}; i++ ))
 do
     if [ "$ips" == "ipv4" ]
@@ -35,8 +34,8 @@ do
 		colo=$(grep -w "($(echo ${temp[@]} | sed -e 's/ /\n/g' | grep colo= | cut -f 2- -d'='))" colo.txt | awk -F"-" '{print $1}')
 	fi
     
-    
-        echo "IP:${anycast[$I]}|设置带宽 (($bandwidth * 8)) Mbps|实测带宽 ${realbandwidth[$I]} Mbps|峰值速度 ${maxl[$I]} kB/s|往返延迟 ${avgmsl[$I]} 毫秒|数据中心 $colo|公网IP $publicip"
+        result=$(expr $bandwidth \* 8)
+        echo "IP:${anycast[$i]}|设置带宽 $result Mbps|实测带宽 ${realbandwidth[$i]} Mbps|峰值速度 ${maxl[$i]} kB/s|往返延迟 ${avgmsl[$i]} 毫秒|数据中心 $colo|公网IP $publicip"
 done
 
 if [ $tls == 1 ]
@@ -401,7 +400,7 @@ killall -9 mihomo
 url=$(sed -n '1p' url.txt)
 domain=$(echo $url | cut -f 1 -d'/')
 file=$(echo $url | cut -f 2- -d'/')
-bandwidth=1  #设置带宽
+bandwidth=2  #设置带宽
 tasknum=20   #设置多线程
 ips=ipv4    #设置类型
 filename=ips-v4.txt
