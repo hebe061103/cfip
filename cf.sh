@@ -184,7 +184,9 @@ while true
 do
 	while true
 	do
-		mkdir rtt
+		if [ ! -d "rtt" ]; then
+                   mkdir rtt
+                fi
 		echo "正在生成 $ips"
 		cp $fileips ipstemp.txt
 		unset temp

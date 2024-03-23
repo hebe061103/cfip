@@ -31,6 +31,21 @@ else
 	publicip=$(echo ${temp[@]} | sed -e 's/ /\n/g' | grep ip= | cut -f 2- -d'=')
 	colo=$(grep -w "($(echo ${temp[@]} | sed -e 's/ /\n/g' | grep colo= | cut -f 2- -d'='))" colo.txt | awk -F"-" '{print $1}')
 fi
+clear
+echo "优选IP $anycast"
+echo "公网IP $publicip"
+if [ $tls == 1 ]
+then
+	echo "支持端口 443 2053 2083 2087 2096 8443"
+else
+	echo "支持端口 80 8080 8880 2052 2082 2086 2095"
+fi
+echo "设置带宽 $bandwidth Mbps"
+echo "实测带宽 $realbandwidth Mbps"
+echo "峰值速度 $max kB/s"
+echo "往返延迟 $avgms 毫秒"
+echo "数据中心 $colo"
+echo "总计用时 $[$endtime-$starttime] 秒"
 }
 
 function rtthttps(){
@@ -184,7 +199,10 @@ while true
 do
 	while true
 	do
-		mkdir rtt
+		rm -rf rtt rtt.txt log.txt speed.txt
+		if [ ! -d "rtt" ]; then
+                   mkdir rtt
+                fi
 		echo "正在生成 $ips"
 		unset temp
 		if [ "$ips" == "ipv4" ]
@@ -338,11 +356,44 @@ do
 		break
 done
 }
+function datacheck(){
+clear
+echo "如果这些下面这些文件下载失败,可以手动访问网址下载保存至同级目录"
+echo "https://www.baipiao.eu.org/cloudflare/colo 另存为 colo.txt"
+echo "https://www.baipiao.eu.org/cloudflare/url 另存为 url.txt"
+echo "https://www.baipiao.eu.org/cloudflare/ips-v4 另存为 ips-v4.txt"
+echo "https://www.baipiao.eu.org/cloudflare/ips-v6 另存为 ips-v6.txt"
+while true
+do
+	if [ ! -f "colo.txt" ]
+	then
+		echo "从服务器下载数据中心信息 colo.txt"
+		curl --retry 2 -s https://www.baipiao.eu.org/cloudflare/colo -o colo.txt
+	elif [ ! -f "url.txt" ]
+	then
+		echo "从服务器下载测速文件地址 url.txt"
+		curl --retry 2 -s https://www.baipiao.eu.org/cloudflare/url -o url.txt
+	elif [ ! -f "ips-v4.txt" ]
+	then
+		echo "从服务器下载IPV4数据 ips-v4.txt"
+		curl --retry 2 -s https://www.baipiao.eu.org/cloudflare/ips-v4 -o ips-v4.txt
+	elif [ ! -f "ips-v6.txt" ]
+	then
+		echo "从服务器下载IPV6数据 ips-v6.txt"
+		curl --retry 2 -s https://www.baipiao.eu.org/cloudflare/ips-v6 -o ips-v6.txt
+	else
+		break
+	fi
+done
+}
+
 #模板文件路径
 parm_path=$(cd `dirname $0`; pwd)
-killall -9 mihomo
 cd $parm_path
+rm -rf rtt rtt.txt log.txt speed.txt
 echo "" > cfiplist
+datacheck
+killall -9 mihomo
 url=$(sed -n '1p' url.txt)
 domain=$(echo $url | cut -f 1 -d'/')
 file=$(echo $url | cut -f 2- -d'/')
@@ -351,7 +402,6 @@ tasknum=10   #设置多线程
 ips=ipv4    #设置类型
 filename=ips-v4.txt
 tls=0    #是否使用https
-rm -rf rtt rtt.txt log.txt speed.txt
 clear
 echo "缓存已经清空"
 while (true)
