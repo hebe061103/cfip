@@ -400,15 +400,15 @@ url=$(sed -n '1p' url.txt)
 domain=$(echo $url | cut -f 1 -d'/')
 file=$(echo $url | cut -f 2- -d'/')
 bandwidth=5  #设置带宽
-tasknum=10   #设置多线程
+tasknum=20   #设置多线程
 ips=ipv4    #设置类型
 filename=ips-v4.txt
 tls=0    #是否使用https
 ipsize=5 #设置要获取的IP数量
 ipcfnum=0
 echo "缓存已经清空"
+sed -i '1d' cfiplist
 bettercloudflareip
-sed -i '/./,/^$/!d' cfiplist
 #----------------------------------------------------------------------------------------------
 #开始整理config.yaml配置文件并提取代理合并入文件
 echo --$date-- "开始整理配置文件并提取代理" |tee -a /tmp/cf.log
