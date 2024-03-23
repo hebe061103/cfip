@@ -5,7 +5,6 @@ function bettercloudflareip(){
 speed=$[$bandwidth*1024]
 cloudflaretest
 unset temp
-clear
 echo "优选IP"
 for I in ${#anycast[@]};do
     if [ "$ips" == "ipv4" ]
@@ -35,7 +34,7 @@ for I in ${#anycast[@]};do
 	fi
     
     
-        echo "${remarks_array[$I]}|设置带宽 $bandwidth Mbps|实测带宽 ${realbandwidth[$I]} Mbps|峰值速度 ${maxl[$I]} kB/s|往返延迟 ${avgmsl[$I]} 毫秒|数据中心 $colo|公网IP $publicip"
+        echo "IP:${anycast[$I]}|设置带宽 $bandwidth Mbps|实测带宽 ${realbandwidth[$I]} Mbps|峰值速度 ${maxl[$I]} kB/s|往返延迟 ${avgmsl[$I]} 毫秒|数据中心 $colo|公网IP $publicip"
 done
 
 if [ $tls == 1 ]
@@ -333,19 +332,20 @@ do
 				echo "$ip:速度$max KB/s ,系统要求速度为:$speed KB/s"
 				if [ $max -gt $speed ]
 				then
-					let ipcfnum++
 					anycast[$ipcfnum]=$ip
 					realbandwidth[$ipcfnum]=$[$max/128]
 					maxl[$ipcfnum]=$max
 					avgmsl[$ipcfnum]=$avgms
 					echo "$ip:峰值速度$ipcfnum|$max KB/s" |tee -a cfiplist
-					if [ $ipcfnum -eq 5 ]
+					linenum=$(wc -l cfiplist | awk '{print $1}')
+					if [ $linenum -eq $ipsize ]
 					then
 						status=1
 						ipcfnum=0
 						rm -rf rtt rtt.txt
 						break
 					fi
+					ipcfnum=$((ipcfnum + 1))
 				fi
 			done
 			if [[ $status -eq 1 ]]
@@ -354,7 +354,7 @@ do
 			fi
 		fi
 	done
-		break
+	break
 done
 }
 function datacheck(){
@@ -393,6 +393,7 @@ parm_path=$(cd `dirname $0`; pwd)
 cd $parm_path
 rm -rf rtt rtt.txt log.txt speed.txt
 echo "" > cfiplist
+clear
 datacheck
 killall -9 mihomo
 url=$(sed -n '1p' url.txt)
@@ -403,18 +404,11 @@ tasknum=10   #设置多线程
 ips=ipv4    #设置类型
 filename=ips-v4.txt
 tls=0    #是否使用https
-clear
+ipsize=5 #设置要获取的IP数量
+ipcfnum=0
 echo "缓存已经清空"
-while (true)
-do
-linenum=$(wc -l cfiplist | awk '{print $1}')
-if [  $linenum -lt 5 ];then
-	bettercloudflareip
-else
-	sed -i '/./,/^$/!d' cfiplist
-	break
-fi
-done
+bettercloudflareip
+sed -i '/./,/^$/!d' cfiplist
 #----------------------------------------------------------------------------------------------
 #开始整理config.yaml配置文件并提取代理合并入文件
 echo --$date-- "开始整理配置文件并提取代理" |tee -a /tmp/cf.log
