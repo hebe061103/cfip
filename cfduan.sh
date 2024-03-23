@@ -6,21 +6,23 @@ speed=$[$bandwidth*1024]
 cloudflaretest
 unset temp
 echo "优选IP"
-for I in ${#anycast[@]};do
+echo "${anycast[@]}"
+for (( i=0; i<${#anycast[@]}; i++ ))
+do
     if [ "$ips" == "ipv4" ]
         then
 		if [ $tls == 1 ]
 		then
-			temp=($(curl --resolve $domain:443:${anycast[$I]} --retry 1 -s https://$domain/cdn-cgi/trace --connect-timeout 2 --max-time 3))
+			temp=($(curl --resolve $domain:443:${anycast[$i]} --retry 1 -s https://$domain/cdn-cgi/trace --connect-timeout 2 --max-time 3))
 		else
-			temp=($(curl -x ${anycast[$I]}:80 --retry 1 -s http://$domain/cdn-cgi/trace --connect-timeout 2 --max-time 3))
+			temp=($(curl -x ${anycast[$i]}:80 --retry 1 -s http://$domain/cdn-cgi/trace --connect-timeout 2 --max-time 3))
 		fi
         else
 		if [ $tls == 1 ]
 		then
-			temp=($(curl --resolve $domain:443:${anycast[$I]} --retry 1 -s https://$domain/cdn-cgi/trace --connect-timeout 2 --max-time 3))
+			temp=($(curl --resolve $domain:443:${anycast[$i]} --retry 1 -s https://$domain/cdn-cgi/trace --connect-timeout 2 --max-time 3))
 		else
-			temp=($(curl -x ${anycast[$I]}:80 --retry 1 -s http://$domain/cdn-cgi/trace --connect-timeout 2 --max-time 3))
+			temp=($(curl -x ${anycast[$i]}:80 --retry 1 -s http://$domain/cdn-cgi/trace --connect-timeout 2 --max-time 3))
 		fi
         fi
         
@@ -34,7 +36,7 @@ for I in ${#anycast[@]};do
 	fi
     
     
-        echo "IP:${anycast[$I]}|设置带宽 $bandwidth Mbps|实测带宽 ${realbandwidth[$I]} Mbps|峰值速度 ${maxl[$I]} kB/s|往返延迟 ${avgmsl[$I]} 毫秒|数据中心 $colo|公网IP $publicip"
+        echo "IP:${anycast[$I]}|设置带宽 (($bandwidth * 8)) Mbps|实测带宽 ${realbandwidth[$I]} Mbps|峰值速度 ${maxl[$I]} kB/s|往返延迟 ${avgmsl[$I]} 毫秒|数据中心 $colo|公网IP $publicip"
 done
 
 if [ $tls == 1 ]
@@ -399,7 +401,7 @@ killall -9 mihomo
 url=$(sed -n '1p' url.txt)
 domain=$(echo $url | cut -f 1 -d'/')
 file=$(echo $url | cut -f 2- -d'/')
-bandwidth=2  #设置带宽
+bandwidth=1  #设置带宽
 tasknum=20   #设置多线程
 ips=ipv4    #设置类型
 filename=ips-v4.txt
