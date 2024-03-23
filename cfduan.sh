@@ -24,7 +24,7 @@ for I in ${#anycast[@]};do
 		fi
         fi
         
-	if [ $(echo ${temp[@]} | sed -e 's/ /\n/g' | grep colo= | wc -l) == 0 ]
+    if [ $(echo ${temp[@]} | sed -e 's/ /\n/g' | grep colo= | wc -l) == 0 ]
 	then
 		publicip=获取超时
 		colo=获取超时
@@ -399,7 +399,7 @@ killall -9 mihomo
 url=$(sed -n '1p' url.txt)
 domain=$(echo $url | cut -f 1 -d'/')
 file=$(echo $url | cut -f 2- -d'/')
-bandwidth=5  #设置带宽
+bandwidth=2  #设置带宽
 tasknum=20   #设置多线程
 ips=ipv4    #设置类型
 filename=ips-v4.txt
