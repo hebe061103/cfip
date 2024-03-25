@@ -451,6 +451,8 @@ $parm_path/Create_v2ray
 echo --$date-- "------------------------等待代理服务稳定-------------------------" |tee -a /tmp/cf.log
 sleep 5
 $parm_path/Creategithubfile
+sleep 10
+$parm_path/mihomodaemon.sh &
 #清除日志内容
 a=$(grep -c "" /tmp/cf.log)
 if [ $a -gt 100 ]; then
