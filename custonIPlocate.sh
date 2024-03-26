@@ -290,7 +290,7 @@ do
 			do
 				avgms=$(echo $i | awk -F_ '{print $1}')
 				ip=$(echo $i | awk -F_ '{print $2}')
-				echo "正在测试 $ip"
+				echo "正在测试: $ip"
 				if [ $tls == 1 ]
 				then
 					max=$(speedtesthttps $ip)
@@ -336,7 +336,7 @@ do
 					iplocate=$(echo "$colo" | grep $locate)
 					if [[ "$iplocate" != "" ]]
 					then
-						echo "IP所属位置在:$locate"
+						echo "IP所属位置在:$locate 非指定地址选择丢弃."
 					else
 						echo "IP所属位置在:$colo"
 						echo "$ip:峰值速度$ipcfnum|$max KB/s" |tee -a cfiplist
@@ -443,7 +443,10 @@ date=$(date "+%Y-%m-%d %H:%M:%S")
 echo --$date-- "------------------------重启CLASH-----------------------------" |tee -a /tmp/cf.log
 rm /usr/local/clash/config.yaml
 cp /tmp/config_cl.yaml  /usr/local/clash/config.yaml
-/usr/sbin/screen -S x -X screen /usr/bin/mihomo -d /usr/local/clash &
+screen_name="x"				# 要建立的screen名字
+/usr/sbin/screen -dmS $screen_name
+/usr/sbin/screen -x -S $screen_name -p 0 -X stuff "/usr/bin/mihomo -d /usr/local/clash"	# 进行执行
+/usr/sbin/screen -x -S $screen_name -p 0 -X stuff $'\n'
 date=$(date "+%Y-%m-%d %H:%M:%S")
 echo --$date-- "------------------------重启CLASH完成-------------------------" |tee -a /tmp/cf.log
 #执行github同步脚本
