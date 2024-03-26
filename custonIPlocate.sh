@@ -399,7 +399,9 @@ rm -rf rtt rtt.txt log.txt speed.txt
 echo "" > cfiplist
 clear
 datacheck
+killall -9 mihomodaemon.sh
 killall -9 mihomo
+killall -9 screen
 url=$(sed -n '1p' url.txt)
 domain=$(echo $url | cut -f 1 -d'/')
 file=$(echo $url | cut -f 2- -d'/')
