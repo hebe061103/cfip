@@ -298,12 +298,13 @@ do
 					max=$(speedtesthttp $ip)
 				fi
 				max=$[$max/1024]
+				echo "当前IP速度:$max KB/s"
 				if [ $max -gt $speed ]
 				then
 					anycast=$ip
 					realbandwidth=$[$max/128]
 					avgmsl=$avgms
-					echo "获取IP归属地"
+					echo "命中优选IP,正在获取归属地"
 					if [ "$ips" == "ipv4" ]
 						then
 							if [ $tls == 1 ]
@@ -402,7 +403,7 @@ killall -9 mihomo
 url=$(sed -n '1p' url.txt)
 domain=$(echo $url | cut -f 1 -d'/')
 file=$(echo $url | cut -f 2- -d'/')
-bandwidth=1  #设置带宽
+bandwidth=4  #设置带宽
 tasknum=20   #设置多线程
 ips=ipv4    #设置类型
 filename=ips-v4.txt
@@ -442,7 +443,7 @@ date=$(date "+%Y-%m-%d %H:%M:%S")
 echo --$date-- "------------------------重启CLASH-----------------------------" |tee -a /tmp/cf.log
 rm /usr/local/clash/config.yaml
 cp /tmp/config_cl.yaml  /usr/local/clash/config.yaml
-/usr/bin/mihomo -d /usr/local/clash &
+/usr/sbin/screen -S x -X screen /usr/bin/mihomo -d /usr/local/clash &
 date=$(date "+%Y-%m-%d %H:%M:%S")
 echo --$date-- "------------------------重启CLASH完成-------------------------" |tee -a /tmp/cf.log
 #执行github同步脚本
