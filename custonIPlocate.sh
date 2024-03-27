@@ -401,7 +401,6 @@ clear
 datacheck
 killall -9 mihomodaemon.sh
 killall -9 mihomo
-killall -9 screen
 url=$(sed -n '1p' url.txt)
 domain=$(echo $url | cut -f 1 -d'/')
 file=$(echo $url | cut -f 2- -d'/')
@@ -445,10 +444,7 @@ date=$(date "+%Y-%m-%d %H:%M:%S")
 echo --$date-- "------------------------重启CLASH-----------------------------" |tee -a /tmp/cf.log
 rm /usr/local/clash/config.yaml
 cp /tmp/config_cl.yaml  /usr/local/clash/config.yaml
-screen_name="x"				# 要建立的screen名字
-/usr/sbin/screen -dmS $screen_name
-/usr/sbin/screen -x -S $screen_name -p 0 -X stuff "/usr/bin/mihomo -d /usr/local/clash"	# 进行执行
-/usr/sbin/screen -x -S $screen_name -p 0 -X stuff $'\n'
+/usr/bin/mihomo -d /usr/local/clash &
 date=$(date "+%Y-%m-%d %H:%M:%S")
 echo --$date-- "------------------------重启CLASH完成-------------------------" |tee -a /tmp/cf.log
 #执行github同步脚本
