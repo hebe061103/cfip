@@ -404,7 +404,7 @@ killall -9 mihomo
 url=$(sed -n '1p' url.txt)
 domain=$(echo $url | cut -f 1 -d'/')
 file=$(echo $url | cut -f 2- -d'/')
-bandwidth=2  #设置带宽
+bandwidth=4  #设置带宽
 tasknum=20   #设置多线程
 ips=ipv4    #设置类型
 filename=ips-v4.txt
