@@ -18,18 +18,6 @@ dns:
 proxies:
   # 以上为代理地址请插入
 proxy-groups:
-  - name: 🚀 节点选择
-    type: select
-    proxies:
-      - ♻️  自动选择
-      - 📢  负载均衡-散列
-      # 以上为节点选择组的自动选择代理请插入
-  - name: ♻️  自动选择
-    type: url-test
-    url: http://www.gstatic.com/generate_204
-    interval: 300
-    proxies:
-      # 以上为自动选择组下面的代理地址请插入
   - name: 📢  负载均衡-散列
     type: load-balance
     url: http://www.google.com/generate_204
