@@ -404,14 +404,14 @@ killall -9 mihomo
 url=$(sed -n '1p' url.txt)
 domain=$(echo $url | cut -f 1 -d'/')
 file=$(echo $url | cut -f 2- -d'/')
-bandwidth=4  #设置带宽
+bandwidth=5  #设置带宽
 tasknum=20   #设置多线程
 ips=ipv4    #设置类型
 filename=ips-v4.txt
 tls=0    #是否使用https
 ipsize=5 #设置要获取的IP数量
 ipcfnum=0
-locate=""
+locate="fdl"
 echo "缓存已经清空"
 sed -i '1d' cfiplist
 bettercloudflareip
@@ -442,7 +442,8 @@ date=$(date "+%Y-%m-%d %H:%M:%S")
 echo --$date-- "------------------------重启CLASH-----------------------------" |tee -a /tmp/cf.log
 rm /usr/local/clash/config.yaml
 cp /tmp/config_cl.yaml  /usr/local/clash/config.yaml
-/usr/bin/mihomo -d /usr/local/clash &
+/usr/bin/tmux new-session -d -s cfip -n cf # 启动tmux会话，指定会话名称和窗口名称
+/usr/bin/tmux send-keys -t cfip:cf "/usr/bin/mihomo -d /usr/local/clash" C-m  # 设置tmux窗口自动执行的命令 # 使tmux窗口自动进入attached模式 tmux attach -t mysession
 date=$(date "+%Y-%m-%d %H:%M:%S")
 echo --$date-- "------------------------重启CLASH完成-------------------------" |tee -a /tmp/cf.log
 #执行github同步脚本
