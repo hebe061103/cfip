@@ -442,8 +442,8 @@ date=$(date "+%Y-%m-%d %H:%M:%S")
 echo --$date-- "------------------------重启CLASH-----------------------------" |tee -a /tmp/cf.log
 rm /usr/local/clash/config.yaml
 cp /tmp/config_cl.yaml  /usr/local/clash/config.yaml
-/usr/bin/tmux -u new-session -d -s cfip -n cf # 启动tmux会话，指定会话名称和窗口名称
-/usr/bin/tmux send-keys -t cfip:cf "clear ; /usr/bin/mihomo -d /usr/local/clash" C-m  # 设置tmux窗口自动执行的命令 # 使tmux窗口自动进入attached模式 tmux attach -t mysession
+/usr/bin/tmux new-session -d -s cf -n cfw
+/usr/bin/tmux send-keys -t cf:cfw "/usr/bin/mihomo -d /usr/local/clash" C-m  # 设置tmux窗口自动执行的命令 # 使tmux窗口自动进入attached模式 tmux attach -t mysession
 date=$(date "+%Y-%m-%d %H:%M:%S")
 echo --$date-- "------------------------重启CLASH完成-------------------------" |tee -a /tmp/cf.log
 #执行github同步脚本
