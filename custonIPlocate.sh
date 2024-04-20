@@ -411,7 +411,7 @@ filename=ips-v4.txt
 tls=0    #是否使用https
 ipsize=5 #设置要获取的IP数量
 ipcfnum=0
-locate="America"
+locate=""
 echo "缓存已经清空"
 sed -i '1d' cfiplist
 bettercloudflareip
