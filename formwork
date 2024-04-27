@@ -18,10 +18,6 @@ dns:
 proxies:
   # 以上为代理地址请插入
 proxy-groups:
-  - name: 🚀 节点选择
-    type: select
-    proxies:
-      # 以上为节点选择组的自动选择代理请插入
   - name: 🔮 负载均衡
     type: load-balance
     url: http://www.google.com/generate_204
@@ -34,7 +30,6 @@ proxy-groups:
     proxies:
       - REJECT
 rules:
-  - DOMAIN-SUFFIX,okx.com,🚀 节点选择
   - DOMAIN-SUFFIX,api-access.pangolin-sdk-toutiao-b.com,🔯 全球拦截
   - DOMAIN-SUFFIX,mcupdate.gstarcad.com,🔯 全球拦截
   - DOMAIN-SUFFIX,adx.open-adx.com,🔯 全球拦截
