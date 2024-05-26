@@ -16,11 +16,11 @@ dns:
   listen: 0.0.0.0:9053
   fake-ip-range: 12.0.0.1/16
 proxies:
-  - {name: 峰值速度0|5751 KB/s, server: 104.16.210.182, port: 80, type: vless, uuid: 2e632913-bae0-4855-893c-02c828c835a2, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: worker-calm-rice-56e5.hebe061103.workers.dev}}}
-  - {name: 峰值速度1|5302 KB/s, server: 104.16.85.168, port: 80, type: vless, uuid: 3ada7b0b-4734-448f-adc6-b88a40f65518, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: worker-dark-breeze-d0d7.hebe061103.workers.dev}}}
-  - {name: 峰值速度2|5807 KB/s, server: 104.16.187.245, port: 80, type: vless, uuid: 27b9fc10-48a1-42e4-aef1-aef97860fa3a, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: hello-world-noisy-feather-0a79.hebe061103.workers.dev}}}
-  - {name: 峰值速度3|5333 KB/s, server: 104.18.32.247, port: 80, type: vless, uuid: efe6c33a-5bb7-4aa6-aa79-ad43fe7f86ad, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: hello-world-wild-wave-7a34.hebe061103.workers.dev}}}
-  - {name: 峰值速度4|5215 KB/s, server: 104.16.126.32, port: 80, type: vless, uuid: 0cadcba3-7a09-474d-a4a6-74636407ff19, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: hello-world-proud-voice-9777.hebe061103.workers.dev}}}
+  - {name: 峰值速度0|5373 KB/s, server: 104.16.20.31, port: 80, type: vless, uuid: 2e632913-bae0-4855-893c-02c828c835a2, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: worker-calm-rice-56e5.hebe061103.workers.dev}}}
+  - {name: 峰值速度1|5614 KB/s, server: 162.251.82.159, port: 80, type: vless, uuid: 3ada7b0b-4734-448f-adc6-b88a40f65518, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: worker-dark-breeze-d0d7.hebe061103.workers.dev}}}
+  - {name: 峰值速度2|5471 KB/s, server: 172.64.173.140, port: 80, type: vless, uuid: 27b9fc10-48a1-42e4-aef1-aef97860fa3a, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: hello-world-noisy-feather-0a79.hebe061103.workers.dev}}}
+  - {name: 峰值速度3|5321 KB/s, server: 104.18.86.14, port: 80, type: vless, uuid: efe6c33a-5bb7-4aa6-aa79-ad43fe7f86ad, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: hello-world-wild-wave-7a34.hebe061103.workers.dev}}}
+  - {name: 峰值速度4|5723 KB/s, server: 104.16.52.45, port: 80, type: vless, uuid: 0cadcba3-7a09-474d-a4a6-74636407ff19, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: hello-world-proud-voice-9777.hebe061103.workers.dev}}}
   # 以上为代理地址请插入
 proxy-groups:
   - name: 🔮 负载均衡
@@ -29,11 +29,11 @@ proxy-groups:
     interval: 300
     strategy: consistent-hashing
     proxies:
-      - 峰值速度0|5751 KB/s
-      - 峰值速度1|5302 KB/s
-      - 峰值速度2|5807 KB/s
-      - 峰值速度3|5333 KB/s
-      - 峰值速度4|5215 KB/s
+      - 峰值速度0|5373 KB/s
+      - 峰值速度1|5614 KB/s
+      - 峰值速度2|5471 KB/s
+      - 峰值速度3|5321 KB/s
+      - 峰值速度4|5723 KB/s
       # 以上为散列组下面的代理地址请插入
   - name: 🔯 全球拦截
     type: select
