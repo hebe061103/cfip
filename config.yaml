@@ -5,11 +5,11 @@ mode: Rule
 log-level: info
 external-controller: :9090
 proxies:
-  - {name: 峰值速度0|6163 KB/s, server: 104.16.146.212, port: 80, type: vless, uuid: 2e632913-bae0-4855-893c-02c828c835a2, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: worker-calm-rice-56e5.hebe061103.workers.dev}}}
-  - {name: 峰值速度1|5663 KB/s, server: 104.18.207.229, port: 80, type: vless, uuid: 3ada7b0b-4734-448f-adc6-b88a40f65518, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: worker-dark-breeze-d0d7.hebe061103.workers.dev}}}
-  - {name: 峰值速度2|5799 KB/s, server: 104.19.184.96, port: 80, type: vless, uuid: 27b9fc10-48a1-42e4-aef1-aef97860fa3a, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: hello-world-noisy-feather-0a79.hebe061103.workers.dev}}}
-  - {name: 峰值速度3|5192 KB/s, server: 104.18.88.8, port: 80, type: vless, uuid: efe6c33a-5bb7-4aa6-aa79-ad43fe7f86ad, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: hello-world-wild-wave-7a34.hebe061103.workers.dev}}}
-  - {name: 峰值速度4|5356 KB/s, server: 104.16.244.33, port: 80, type: vless, uuid: 0cadcba3-7a09-474d-a4a6-74636407ff19, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: hello-world-proud-voice-9777.hebe061103.workers.dev}}}
+  - {name: 峰值速度0|5628 KB/s, server: 104.17.144.117, port: 80, type: vless, uuid: 2e632913-bae0-4855-893c-02c828c835a2, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: worker-calm-rice-56e5.hebe061103.workers.dev}}}
+  - {name: 峰值速度1|5527 KB/s, server: 104.16.62.101, port: 80, type: vless, uuid: 3ada7b0b-4734-448f-adc6-b88a40f65518, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: worker-dark-breeze-d0d7.hebe061103.workers.dev}}}
+  - {name: 峰值速度2|5937 KB/s, server: 104.17.255.233, port: 80, type: vless, uuid: 27b9fc10-48a1-42e4-aef1-aef97860fa3a, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: hello-world-noisy-feather-0a79.hebe061103.workers.dev}}}
+  - {name: 峰值速度3|5724 KB/s, server: 104.18.83.52, port: 80, type: vless, uuid: efe6c33a-5bb7-4aa6-aa79-ad43fe7f86ad, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: hello-world-wild-wave-7a34.hebe061103.workers.dev}}}
+  - {name: 峰值速度4|5421 KB/s, server: 104.19.44.1, port: 80, type: vless, uuid: 0cadcba3-7a09-474d-a4a6-74636407ff19, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: hello-world-proud-voice-9777.hebe061103.workers.dev}}}
   # 以上为代理地址请插入
 proxy-groups:
   - name: 🚀 节点选择
@@ -18,22 +18,22 @@ proxy-groups:
       - ♻️  自动选择
       - 🔮 负载均衡
       - 🔯 故障转移
-      - 峰值速度0|6163 KB/s
-      - 峰值速度1|5663 KB/s
-      - 峰值速度2|5799 KB/s
-      - 峰值速度3|5192 KB/s
-      - 峰值速度4|5356 KB/s
+      - 峰值速度0|5628 KB/s
+      - 峰值速度1|5527 KB/s
+      - 峰值速度2|5937 KB/s
+      - 峰值速度3|5724 KB/s
+      - 峰值速度4|5421 KB/s
       # 以上为节点选择组的自动选择代理请插入
   - name: ♻️  自动选择
     type: url-test
     url: http://www.gstatic.com/generate_204
     interval: 300
     proxies:
-      - 峰值速度0|6163 KB/s
-      - 峰值速度1|5663 KB/s
-      - 峰值速度2|5799 KB/s
-      - 峰值速度3|5192 KB/s
-      - 峰值速度4|5356 KB/s
+      - 峰值速度0|5628 KB/s
+      - 峰值速度1|5527 KB/s
+      - 峰值速度2|5937 KB/s
+      - 峰值速度3|5724 KB/s
+      - 峰值速度4|5421 KB/s
       # 以上为自动选择组下面的代理地址请插入
   - name: 🔮 负载均衡
     type: load-balance
@@ -41,22 +41,22 @@ proxy-groups:
     url: http://www.gstatic.com/generate_204
     interval: 300
     proxies:
-      - 峰值速度0|6163 KB/s
-      - 峰值速度1|5663 KB/s
-      - 峰值速度2|5799 KB/s
-      - 峰值速度3|5192 KB/s
-      - 峰值速度4|5356 KB/s
+      - 峰值速度0|5628 KB/s
+      - 峰值速度1|5527 KB/s
+      - 峰值速度2|5937 KB/s
+      - 峰值速度3|5724 KB/s
+      - 峰值速度4|5421 KB/s
       # 以上为负载均衡组下面的代理地址请插入
   - name: 🔯 故障转移
     type: fallback
     url: http://www.gstatic.com/generate_204
     interval: 300
     proxies:
-      - 峰值速度0|6163 KB/s
-      - 峰值速度1|5663 KB/s
-      - 峰值速度2|5799 KB/s
-      - 峰值速度3|5192 KB/s
-      - 峰值速度4|5356 KB/s
+      - 峰值速度0|5628 KB/s
+      - 峰值速度1|5527 KB/s
+      - 峰值速度2|5937 KB/s
+      - 峰值速度3|5724 KB/s
+      - 峰值速度4|5421 KB/s
       # 以上为故障转移组下面的代理地址请插入
   - name: 🐟 漏网之鱼
     type: select
@@ -64,11 +64,11 @@ proxy-groups:
       - 🚀 节点选择
       - ♻️  自动选择
       - 🔮 负载均衡
-      - 峰值速度0|6163 KB/s
-      - 峰值速度1|5663 KB/s
-      - 峰值速度2|5799 KB/s
-      - 峰值速度3|5192 KB/s
-      - 峰值速度4|5356 KB/s
+      - 峰值速度0|5628 KB/s
+      - 峰值速度1|5527 KB/s
+      - 峰值速度2|5937 KB/s
+      - 峰值速度3|5724 KB/s
+      - 峰值速度4|5421 KB/s
       # 以上为漏网之鱼组下面的代理地址请插入
 rules:
  - DOMAIN-SUFFIX,xn--ngstr-lra8j.com,🚀 节点选择
