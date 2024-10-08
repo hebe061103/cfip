@@ -16,8 +16,6 @@ dns:
   listen: 0.0.0.0:9053
   fake-ip-range: 12.0.0.1/16
 proxies:
-  - {"name":"备用节点1","type":"vless","server":"dongtaiwang3.com","port":443,"uuid":"a9202ced-3185-489c-8b28-74e9a00d894d","tls":true,"servername":"dongtaiwang.dtku47.xyz","network":"ws","ws-opts":{"path":"/eobjws","headers":{"host":"dongtaiwang.dtku47.xyz"}},"client-fingerprint":"chrome"}
-  - {"name":"备用节点2","type":"vless","server":"cu.dongtaiwang3.com","port":443,"uuid":"7b671cd2-233d-406c-88da-1c687727dc52","tls":true,"servername":"fr.freeh1.xyz","network":"ws","ws-opts":{"path":"/kfhaws","headers":{"host":"fr.freeh1.xyz"}},"client-fingerprint":"chrome"}
   # 以上为代理地址请插入
 proxy-groups:
   - name: 🔮 负载均衡
@@ -26,8 +24,6 @@ proxy-groups:
     interval: 300
     strategy: consistent-hashing
     proxies:
-      - 备用节点1
-      - 备用节点2
       # 以上为散列组下面的代理地址请插入
   - name: 🔯 全球拦截
     type: select

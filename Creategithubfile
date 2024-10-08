@@ -26,8 +26,8 @@ do
   done < $filename
 done
 cd $parm_path
-cp /tmp/no_dns_config.yaml config.yaml
-cp /tmp/config_cl.yaml config_dns.yaml
+cp /tmp/no_dns_config.yaml no_dns_config.yaml
+cp /tmp/config_cl.yaml config_dns_yes.yaml
 while true;
 do
 date=$(date "+%Y-%m-%d %H:%M:%S")
