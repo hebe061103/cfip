@@ -1,8 +1,6 @@
 port: 7890
 socks-port: 7891
 allow-lan: true
-external-controller: 0.0.0.0:9090
-external-ui: /usr/local/clash/ui
 mode: Rule
 log-level: info
 #TCP并发连接将使用所有IP进行TCP握手，并使用最先握手的IP进行后续请求,默认为false
