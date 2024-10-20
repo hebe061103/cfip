@@ -431,7 +431,7 @@ do
   b=${line#*:}
   line="- {name: $b, server: $a, port: 80, type: vless, $uuid, tls: false, network: ws, ws-opts: {path: '"/?ed=2048"', headers: {$work}}}"
   sed -i '/以上为代理地址请插入/i\'"  $line"'' /tmp/newconfig
-  sed -i '/以上为散列组下面的代理地址请插入/i\'"      - $b"'' /tmp/newconfig
+  sed -i '/以上为负载均衡下面的代理地址请插入/i\'"      - $b"'' /tmp/newconfig
   fi
   done < $filename
 done
