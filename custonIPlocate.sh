@@ -440,8 +440,8 @@ mv /tmp/newconfig /tmp/config_cl.yaml
 echo --$date-- "配置文件以生成到:/tmp/config_cl.yaml,更新完成!" |tee -a /tmp/cf.log
 date=$(date "+%Y-%m-%d %H:%M:%S")
 echo --$date-- "------------------------重启CLASH-----------------------------" |tee -a /tmp/cf.log
-rm /usr/local/clash/config.yaml
-cp /tmp/config_cl.yaml  /usr/local/clash/config.yaml
+rm /root/.confing/mihomo/config.yaml
+cp /tmp/config_cl.yaml  /root/.confing/mihomo/config.yaml
 /usr/bin/killall -9 tmux
 /usr/bin/tmux new-session -d -s cf -n cfw
 /usr/bin/tmux send-keys -t cf:cfw "/usr/bin/mihomo -d /usr/local/clash" C-m  # 设置tmux窗口自动执行的命令 # 使tmux窗口自动进入attached模式 tmux attach -t mysession
