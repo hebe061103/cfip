@@ -373,19 +373,19 @@ do
 	if [ ! -f "colo.txt" ]
 	then
 		echo "从服务器下载数据中心信息 colo.txt"
-		curl --retry 2 -s https://www.baipiao.eu.org/cloudflare/colo -o colo.txt
+		wget -c --tries=3 https://www.baipiao.eu.org/cloudflare/colo -O colo.txt
 	elif [ ! -f "url.txt" ]
 	then
 		echo "从服务器下载测速文件地址 url.txt"
-		curl --retry 2 -s https://www.baipiao.eu.org/cloudflare/url -o url.txt
+		wget -c --tries=3 https://www.baipiao.eu.org/cloudflare/url -O url.txt
 	elif [ ! -f "ips-v4.txt" ]
 	then
 		echo "从服务器下载IPV4数据 ips-v4.txt"
-		curl --retry 2 -s https://www.baipiao.eu.org/cloudflare/ips-v4 -o ips-v4.txt
+		wget -c --tries=3 https://www.baipiao.eu.org/cloudflare/ips-v4 -O ips-v4.txt
 	elif [ ! -f "ips-v6.txt" ]
 	then
 		echo "从服务器下载IPV6数据 ips-v6.txt"
-		curl --retry 2 -s https://www.baipiao.eu.org/cloudflare/ips-v6 -o ips-v6.txt
+		wget -c --tries=3 https://www.baipiao.eu.org/cloudflare/ips-v6 -O ips-v6.txt
 	else
 		break
 	fi
