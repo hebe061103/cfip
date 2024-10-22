@@ -399,7 +399,7 @@ rm -rf rtt rtt.txt log.txt speed.txt
 echo "" > cfiplist
 clear
 datacheck
-killall -9 mihomodaemon
+killall -9 mihomodaemon.sh
 killall -9 mihomo
 url=$(sed -n '1p' url.txt)
 domain=$(echo $url | cut -f 1 -d'/')
@@ -454,7 +454,7 @@ echo --$date-- "------------------------等待代理服务稳定----------------
 sleep 5
 $parm_path/Creategithubfile
 sleep 10
-$parm_path/mihomodaemon &
+$parm_path/mihomodaemon.sh &
 #清除日志内容
 a=$(grep -c "" /tmp/cf.log)
 if [ $a -gt 100 ]; then
