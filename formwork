@@ -10,7 +10,7 @@ dns:
   # 开启模式fake-ip
   enhanced-mode: fake-ip
   listen: 0.0.0.0:9053
-  fake-ip-range: 12.0.0.1/24
+  fake-ip-range: 12.0.0.0/24
 proxies:
   # 以上为代理地址请插入
 proxy-groups:
