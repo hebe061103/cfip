@@ -36,6 +36,7 @@ echo "$date 更新!" > README.md
 git add .
 git commit -m "$date"
 repository_address='git remote -v'
+echo "变量:"$repository_address
 if [ ! "$repository_address" ]; then
     git remote add origin https://${GITHUBTOKEN}@github.com/hebe061103/cfip.git
 fi
