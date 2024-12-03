@@ -13,11 +13,11 @@ dns:
   listen: 0.0.0.0:9053
   fake-ip-range: 12.0.0.0/24
 proxies:
-  - {name: CF:104.21.225.220, server: 104.21.225.220, port: 80, type: vless, uuid: 2e632913-bae0-4855-893c-02c828c835a2, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: worker-calm-rice-56e5.hebe061103.workers.dev}}}
-  - {name: CF:104.21.225.190, server: 104.21.225.190, port: 80, type: vless, uuid: 3ada7b0b-4734-448f-adc6-b88a40f65518, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: worker-dark-breeze-d0d7.hebe061103.workers.dev}}}
-  - {name: CF:104.21.225.195, server: 104.21.225.195, port: 80, type: vless, uuid: 27b9fc10-48a1-42e4-aef1-aef97860fa3a, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: hello-world-noisy-feather-0a79.hebe061103.workers.dev}}}
-  - {name: CF:104.21.225.88, server: 104.21.225.88, port: 80, type: vless, uuid: efe6c33a-5bb7-4aa6-aa79-ad43fe7f86ad, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: hello-world-wild-wave-7a34.hebe061103.workers.dev}}}
-  - {name: CF:104.21.225.1, server: 104.21.225.1, port: 80, type: vless, uuid: 0cadcba3-7a09-474d-a4a6-74636407ff19, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: hello-world-proud-voice-9777.hebe061103.workers.dev}}}
+  - {name: CF:104.21.225.169, server: 104.21.225.169, port: 80, type: vless, uuid: 2e632913-bae0-4855-893c-02c828c835a2, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: worker-calm-rice-56e5.hebe061103.workers.dev}}}
+  - {name: CF:104.21.225.249, server: 104.21.225.249, port: 80, type: vless, uuid: 3ada7b0b-4734-448f-adc6-b88a40f65518, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: worker-dark-breeze-d0d7.hebe061103.workers.dev}}}
+  - {name: CF:104.21.225.110, server: 104.21.225.110, port: 80, type: vless, uuid: 27b9fc10-48a1-42e4-aef1-aef97860fa3a, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: hello-world-noisy-feather-0a79.hebe061103.workers.dev}}}
+  - {name: CF:104.21.225.225, server: 104.21.225.225, port: 80, type: vless, uuid: efe6c33a-5bb7-4aa6-aa79-ad43fe7f86ad, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: hello-world-wild-wave-7a34.hebe061103.workers.dev}}}
+  - {name: CF:104.21.225.149, server: 104.21.225.149, port: 80, type: vless, uuid: 0cadcba3-7a09-474d-a4a6-74636407ff19, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: hello-world-proud-voice-9777.hebe061103.workers.dev}}}
   # 以上为代理地址请插入
 proxy-groups:
   - name: 🔮 负载均衡
@@ -26,11 +26,11 @@ proxy-groups:
     interval: 300
     strategy: consistent-hashing
     proxies:
-      - CF:104.21.225.220
-      - CF:104.21.225.190
-      - CF:104.21.225.195
-      - CF:104.21.225.88
-      - CF:104.21.225.1
+      - CF:104.21.225.169
+      - CF:104.21.225.249
+      - CF:104.21.225.110
+      - CF:104.21.225.225
+      - CF:104.21.225.149
       # 以上为负载均衡下面的代理地址请插入
 rules:
   - MATCH, 🔮 负载均衡
