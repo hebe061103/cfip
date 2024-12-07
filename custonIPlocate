@@ -394,7 +394,6 @@ done
 #模板文件路径
 parm_path=$(cd `dirname $0`; pwd)
 cd $parm_path
-rm -rf rtt rtt.txt log.txt speed.txt
 echo "" > cfiplist
 clear
 datacheck
@@ -410,7 +409,7 @@ filename=ips-v4.txt
 tls=0    #是否使用https
 ipsize=5 #设置要获取的IP数量
 ipcfnum=0
-locate="fdl"
+locate="fdl" #指定IP区域
 echo "缓存已经清空"
 sed -i '1d' cfiplist
 bettercloudflareip
@@ -428,7 +427,7 @@ do
   if echo $line | grep "峰值速度";then
   a=${line%:*}
   b=${line#*:}
-  line="- {name: "CF:"$a, server: $a, port: 80, type: vless, $uuid, tls: false, network: ws, ws-opts: {path: '"/?ed=2048"', headers: {$work}}}"
+  line="- {name: "CF:"$a, server: $a, port: 80, type: vless, $uuid, tls: true, network: ws, ws-opts: {path: '"/?ed=2048"', headers: {$work}}}"
   sed -i '/以上为代理地址请插入/i\'"  $line"'' /tmp/newconfig
   sed -i '/以上为负载均衡下面的代理地址请插入/i\'"      - "CF:"$a"'' /tmp/newconfig
   fi
