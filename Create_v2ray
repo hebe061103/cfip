@@ -7,8 +7,7 @@ do
   let l++
   id=`sed -n "$l p" uuid`
   uuid=${id#*: }
-  wk=`sed -n "$l p" workhost`
-  work=${wk#*: }
+  work=`sed -n "$l p" workershost`
   if echo $line | grep "峰值速度";then
   a=${line%:*}
   b=${line#*:}
