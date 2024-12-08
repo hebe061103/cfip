@@ -11,10 +11,10 @@ do
   do
   let l++
   uuid=`sed -n "$l p" uuid`
-  work=`sed -n "$l p" workhost`
+  work=`sed -n "$l p" workershost`
   if echo $line | grep "峰值速度";then
   a=${line%:*}
-  line="- {name: $work, server: $a, port: 80, type: vless, $uuid, tls: false, network: ws, ws-opts: {path: '"/?ed=2048"', headers: {$work}}}"
+  line="- {name: $work, server: $a, port: 80, type: vless, $uuid, tls: false, network: ws, ws-opts: {path: '"/?ed=2048"', headers: {Host: $work}}}"
   sed -i '/以上为代理地址请插入/i\'"  $line"'' /tmp/no_dns_config.yaml
   sed -i '/以上为节点选择组的自动选择代理请插入/i\'"      - $work"'' /tmp/no_dns_config.yaml
   sed -i '/以上为自动选择组下面的代理地址请插入/i\'"      - $work"'' /tmp/no_dns_config.yaml
