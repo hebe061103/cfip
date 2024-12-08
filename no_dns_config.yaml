@@ -18,22 +18,22 @@ proxy-groups:
       - ♻️  自动选择
       - 🔮 负载均衡
       - 🔯 故障转移
-      - 
-      - 
-      - 
-      - 
-      - 
+      - Host: empty-rain-1b4a.hebe061103.workers.dev
+      - Host: gentle-grass-cf96.hebe061103.workers.dev
+      - Host: nameless-resonance-6e4c.hebe061103.workers.dev
+      - Host: gentle-night-12e3.hebe061103.workers.dev
+      - Host: 56e5.hebe061103.workers.dev
       # 以上为节点选择组的自动选择代理请插入
   - name: ♻️  自动选择
     type: url-test
     url: http://www.gstatic.com/generate_204
     interval: 300
     proxies:
-      - 
-      - 
-      - 
-      - 
-      - 
+      - Host: empty-rain-1b4a.hebe061103.workers.dev
+      - Host: gentle-grass-cf96.hebe061103.workers.dev
+      - Host: nameless-resonance-6e4c.hebe061103.workers.dev
+      - Host: gentle-night-12e3.hebe061103.workers.dev
+      - Host: 56e5.hebe061103.workers.dev
       # 以上为自动选择组下面的代理地址请插入
   - name: 🔮 负载均衡
     type: load-balance
@@ -41,22 +41,22 @@ proxy-groups:
     url: http://www.gstatic.com/generate_204
     interval: 300
     proxies:
-      - 
-      - 
-      - 
-      - 
-      - 
+      - Host: empty-rain-1b4a.hebe061103.workers.dev
+      - Host: gentle-grass-cf96.hebe061103.workers.dev
+      - Host: nameless-resonance-6e4c.hebe061103.workers.dev
+      - Host: gentle-night-12e3.hebe061103.workers.dev
+      - Host: 56e5.hebe061103.workers.dev
       # 以上为负载均衡组下面的代理地址请插入
   - name: 🔯 故障转移
     type: fallback
     url: http://www.gstatic.com/generate_204
     interval: 300
     proxies:
-      - 
-      - 
-      - 
-      - 
-      - 
+      - Host: empty-rain-1b4a.hebe061103.workers.dev
+      - Host: gentle-grass-cf96.hebe061103.workers.dev
+      - Host: nameless-resonance-6e4c.hebe061103.workers.dev
+      - Host: gentle-night-12e3.hebe061103.workers.dev
+      - Host: 56e5.hebe061103.workers.dev
       # 以上为故障转移组下面的代理地址请插入
   - name: 🐟 漏网之鱼
     type: select
@@ -64,11 +64,11 @@ proxy-groups:
       - 🚀 节点选择
       - ♻️  自动选择
       - 🔮 负载均衡
-      - 
-      - 
-      - 
-      - 
-      - 
+      - Host: empty-rain-1b4a.hebe061103.workers.dev
+      - Host: gentle-grass-cf96.hebe061103.workers.dev
+      - Host: nameless-resonance-6e4c.hebe061103.workers.dev
+      - Host: gentle-night-12e3.hebe061103.workers.dev
+      - Host: 56e5.hebe061103.workers.dev
       # 以上为漏网之鱼组下面的代理地址请插入
 rules:
  - DOMAIN-SUFFIX,xn--ngstr-lra8j.com,🚀 节点选择
