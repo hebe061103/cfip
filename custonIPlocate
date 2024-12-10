@@ -336,8 +336,8 @@ do
 					iplocate=$(echo "$colo" | grep "${address_locate}")
 					if [[ "$iplocate" != "" ]]
 					then
-					    echo "IP所属位置在:$colo"
-					    echo $colo >> iplocate.txt
+					    echo "IP所属位置在:$iplocate"
+					    echo ${iplocate%,*}$ipcfnum >> iplocate.txt
 						echo "$ip:峰值速度$ipcfnum|$max KB/s" |tee -a cfiplist
 						linenum=$(wc -l cfiplist | awk '{print $1}')
 						if [ $linenum -eq $ipsize ]
