@@ -337,7 +337,7 @@ do
 					if [[ "$iplocate" != "" ]]
 					then
 					    echo "IP所属位置在:$iplocate"
-					    echo ${iplocate%,*} $ipcfnum >> iplocate.txt
+					    echo ${iplocate%,*} $ipcfnum >> iplocate
 						echo "$ip:峰值速度$ipcfnum|$max KB/s" |tee -a cfiplist
 						linenum=$(wc -l cfiplist | awk '{print $1}')
 						if [ $linenum -eq $ipsize ]
@@ -349,7 +349,7 @@ do
 						ipcfnum=$((ipcfnum + 1))
 					else
 						echo "IP所属位置在:$colo 非指定地址添加到备选."
-						echo ${colo%,*} $spare_ip_num >> spare_ip_locate.txt
+						echo ${colo%,*} $spare_ip_num >> spare_ip_locate
 						echo "$ip:峰值速度$spare_ip_num|$max KB/s" |tee -a spare_ip_list
 						sparenum=$(wc -l spare_ip_list | awk '{print $1}')
 						if [ $sparenum -eq $ipsize ]
@@ -375,7 +375,7 @@ do
 					    if [ $linenum -lt $ipsize ]
 						then
 							let s++
-							echo `sed -n "$s p" spare_ip_locate.txt` >> iplocate.txt
+							echo `sed -n "$s p" spare_ip_locate` >> iplocate
 							echo `sed -n "$s p" spare_ip_list` >> cfiplist
 						else
 							break
@@ -424,8 +424,8 @@ done
 #模板文件路径
 parm_path=$(cd `dirname $0`; pwd)
 cd $parm_path
-echo "" > iplocate.txt #清空优选ip位置
-echo "" > spare_ip_locate.txt #清空备选ip位置
+echo "" > iplocate #清空优选ip位置
+echo "" > spare_ip_locate #清空备选ip位置
 echo "" > cfiplist #清空优选ip地址
 echo "" > spare_ip_list #清空备选ip地址
 clear
@@ -446,7 +446,9 @@ ipcfnum=0 #指定ip区域数量
 spare_ip_num=0 #备选ip区域数量
 echo "缓存已经清空"
 sed -i '1d' spare_ip_list
+sed -i '1d' spare_ip_locate
 sed -i '1d' cfiplist
+sed -i '1d' iplocate
 bettercloudflareip
 #----------------------------------------------------------------------------------------------
 #开始整理config.yaml配置文件并提取代理合并入文件
@@ -459,7 +461,7 @@ do
   let l++
   uuid=`sed -n "$l p" uuid`
   work=`sed -n "$l p" workershost`
-  locate=`sed -n "$l p" iplocate.txt`
+  locate=`sed -n "$l p" iplocate`
   if echo $line | grep "峰值速度";then
   a=${line%:*}
   line="- {name: $locate, server: $a, port: 80, type: vless, $uuid, tls: false, network: ws, ws-opts: {path: '"/?ed=2048"', headers: {Host: $work}}}"
