@@ -1,5 +1,6 @@
+
 Hong Kong 0
-Seattle 1
-San Jose 2
+Hong Kong 1
+Hong Kong 2
 Hong Kong 3
-Seattle 4
+Hong Kong 4
