@@ -165,7 +165,7 @@ while true
 do
 	while true
 	do
-		rm -rf rtt rtt.txt log.txt speed.txt iplocate.txt
+		rm -rf rtt rtt.txt log.txt speed.txt iplocate.txt spare_ip_locate.txt
 		if [ ! -d "rtt" ]; then
                    mkdir rtt
                 fi
@@ -337,25 +337,54 @@ do
 					if [[ "$iplocate" != "" ]]
 					then
 					    echo "IP所属位置在:$iplocate"
-					    echo ${iplocate%,*}$ipcfnum >> iplocate.txt
+					    echo ${iplocate%,*} $ipcfnum >> iplocate.txt
 						echo "$ip:峰值速度$ipcfnum|$max KB/s" |tee -a cfiplist
 						linenum=$(wc -l cfiplist | awk '{print $1}')
 						if [ $linenum -eq $ipsize ]
 						then
 							status=1
-							ipcfnum=0
 							rm -rf rtt rtt.txt
 							break
 						fi
 						ipcfnum=$((ipcfnum + 1))
 					else
-						echo "IP所属位置在:$colo 非指定地址选择丢弃."
+						echo "IP所属位置在:$colo 非指定地址添加到备选."
+						echo ${colo%,*} $spare_ip_num >> spare_ip_locate.txt
+						echo "$ip:峰值速度$spare_ip_num|$max KB/s" |tee -a spare_ip_list
+						sparenum=$(wc -l spare_ip_list | awk '{print $1}')
+						if [ $sparenum -eq $ipsize ]
+						then
+							rm -rf rtt rtt.txt
+							break
+						fi
+						spare_ip_num=$((spare_ip_num + 1))
 					fi
 				fi
 			done
 			if [[ $status -eq 1 ]]
 			then
 				break
+			else
+				echo "指定区域ip数量不够,追加部分备选ip"
+			    sparenum=$(wc -l spare_ip_list | awk '{print $1}')
+			    if [ $sparenum -eq $ipsize ]
+			    then
+			    	while true
+			    	do
+					    linenum=$(wc -l cfiplist | awk '{print $1}')
+					    if [ $linenum -lt $ipsize ]
+						then
+							let s++
+							echo `sed -n "$s p" spare_ip_locate.txt` >> iplocate.txt
+							echo `sed -n "$s p" spare_ip_list` >> cfiplist
+						else
+							break
+						fi
+					done
+					break
+				else
+					echo "备选ip数量不够,重复ip优选"
+			    fi
 			fi
 		fi
 	done
@@ -395,7 +424,8 @@ done
 #模板文件路径
 parm_path=$(cd `dirname $0`; pwd)
 cd $parm_path
-echo "" > cfiplist
+echo "" > cfiplist #优选ip地址
+echo "" > spare_ip_list #备选ip地址
 clear
 datacheck
 killall -9 mihomodaemon
@@ -409,9 +439,11 @@ ips=ipv4    #设置类型
 filename=ips-v4.txt
 tls=0    #是否使用https
 ipsize=5 #设置要获取的IP数量
-ipcfnum=0
-address_locate="Hong Kong" #指定IP区域
+address_locate="jkghsd" #指定IP区域
+ipcfnum=0 #指定ip区域数量
+spare_ip_num=0 #备选ip区域数量
 echo "缓存已经清空"
+sed -i '1d' spare_ip_list
 sed -i '1d' cfiplist
 bettercloudflareip
 #----------------------------------------------------------------------------------------------
