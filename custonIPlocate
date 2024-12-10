@@ -165,7 +165,7 @@ while true
 do
 	while true
 	do
-		rm -rf rtt rtt.txt log.txt speed.txt
+		rm -rf rtt rtt.txt log.txt speed.txt iplocate.txt
 		if [ ! -d "rtt" ]; then
                    mkdir rtt
                 fi
@@ -333,12 +333,11 @@ do
 					    
 					result=$(expr $bandwidth \* 8)
 					echo "IP:$ip|设置带宽 $result Mbps|实测带宽 $realbandwidth Mbps|峰值速度 $max kB/s|往返延迟 $avgmsl 毫秒|数据中心 $colo|公网IP $publicip"
-					iplocate=$(echo "$colo" | grep $locate)
+					iplocate=$(echo "$colo" | grep "${address_locate}")
 					if [[ "$iplocate" != "" ]]
 					then
-						echo "IP所属位置在:$locate 非指定地址选择丢弃."
-					else
-						echo "IP所属位置在:$colo"
+					    echo "IP所属位置在:$colo"
+					    echo $colo >> iplocate.txt
 						echo "$ip:峰值速度$ipcfnum|$max KB/s" |tee -a cfiplist
 						linenum=$(wc -l cfiplist | awk '{print $1}')
 						if [ $linenum -eq $ipsize ]
@@ -349,6 +348,8 @@ do
 							break
 						fi
 						ipcfnum=$((ipcfnum + 1))
+					else
+						echo "IP所属位置在:$colo 非指定地址选择丢弃."
 					fi
 				fi
 			done
@@ -409,7 +410,7 @@ filename=ips-v4.txt
 tls=0    #是否使用https
 ipsize=5 #设置要获取的IP数量
 ipcfnum=0
-locate="fdl" #指定IP区域
+address_locate="Hong Kong" #指定IP区域
 echo "缓存已经清空"
 sed -i '1d' cfiplist
 bettercloudflareip
@@ -424,11 +425,12 @@ do
   let l++
   uuid=`sed -n "$l p" uuid`
   work=`sed -n "$l p" workershost`
+  locate=`sed -n "$l p" iplocate.txt`
   if echo $line | grep "峰值速度";then
   a=${line%:*}
-  line="- {name: $work, server: $a, port: 80, type: vless, $uuid, tls: false, network: ws, ws-opts: {path: '"/?ed=2048"', headers: {Host: $work}}}"
+  line="- {name: $locate, server: $a, port: 80, type: vless, $uuid, tls: false, network: ws, ws-opts: {path: '"/?ed=2048"', headers: {Host: $work}}}"
   sed -i '/以上为代理地址请插入/i\'"  $line"'' /tmp/newconfig
-  sed -i '/以上为负载均衡下面的代理地址请插入/i\'"      - $work"'' /tmp/newconfig
+  sed -i '/以上为负载均衡下面的代理地址请插入/i\'"      - $locate"'' /tmp/newconfig
   fi
   done < $filename
 done

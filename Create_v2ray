@@ -8,10 +8,11 @@ do
   id=`sed -n "$l p" uuid`
   uuid=${id#*: }
   work=`sed -n "$l p" workershost`
+  locate=`sed -n "$l p" iplocate.txt`
   if echo $line | grep "峰值速度";then
   a=${line%:*}
   b=${line#*:}
-  line="vless://$uuid@$a:80?encryption=none&security=none&sni=$work&fp=randomized&type=ws&host=$work&path=/?ed=2048#$a"
+  line="vless://$uuid@$a:80?encryption=none&security=none&sni=$work&fp=randomized&type=ws&host=$work&path=/?ed=2048#$locate"
   echo $line >>v2ray.txt
   fi
   done < $filename
