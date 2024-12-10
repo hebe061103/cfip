@@ -8,7 +8,7 @@ do
   id=`sed -n "$l p" uuid`
   uuid=${id#*: }
   work=`sed -n "$l p" workershost`
-  locate=`sed -n "$l p" iplocate.txt`
+  locate=`sed -n "$l p" iplocate`
   if echo $line | grep "峰值速度";then
   a=${line%:*}
   b=${line#*:}

@@ -12,7 +12,7 @@ do
   let l++
   uuid=`sed -n "$l p" uuid`
   work=`sed -n "$l p" workershost`
-  locate=`sed -n "$l p" iplocate.txt`
+  locate=`sed -n "$l p" iplocate`
   if echo $line | grep "峰值速度";then
   a=${line%:*}
   line="- {name: $locate, server: $a, port: 80, type: vless, $uuid, tls: false, network: ws, ws-opts: {path: '"/?ed=2048"', headers: {Host: $work}}}"
