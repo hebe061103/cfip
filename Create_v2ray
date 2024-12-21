@@ -10,9 +10,8 @@ do
   work=`sed -n "$l p" workershost`
   locate=`sed -n "$l p" iplocate`
   if echo $line | grep "峰值速度";then
-  a=${line%:*}
-  line="vless://$uuid@$a:8880?encryption=none&security=none&type=ws&host=$work&path=/?ed=2560#$work"
-  echo $line >>v2ray.txt
+    line="vless://$uuid@$www.visa.com.sg:8880?encryption=none&security=none&type=ws&host=$work&path=/?ed=2560#$work"
+    echo $line >>v2ray.txt
   fi
   done < $filename
 done
