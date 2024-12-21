@@ -11,8 +11,10 @@ do
   locate=`sed -n "$l p" iplocate`
   if echo $line | grep "峰值速度";then
   a=${line%:*}
+  echo $a
   b=${line#*:}
-  line="vless://$uuid@$a:80?encryption=none&security=none&sni=$work&fp=randomized&type=ws&host=$work&path=/?ed=2048#$locate"
+  echo $b
+  line="vless://$uuid@www.visa.com.sg:8880?encryption=none&security=none&type=ws&host=$work&path=/?ed=2560#$work"
   echo $line >>v2ray.txt
   fi
   done < $filename
