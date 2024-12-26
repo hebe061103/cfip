@@ -1,17 +1,19 @@
 #!/bin/bash
 rm v2ray.txt
-for filename in $(ls cfiplist)
-do
-  while read line
-  do
-  let l++
-  id=`sed -n "$l p" uuid`
-  uuid=${id#*: }
-  work=`sed -n "$l p" workershost`
-  locate=`sed -n "$l p" iplocate`
-  if echo $line | grep "峰值速度";then
-    line="vless://$uuid@www.visa.com.sg:8880?encryption=none&security=none&type=ws&host=$work&path=/?ed=2560#$locate"
-    echo $line >>v2ray.txt
-  fi
-  done < $filename
-done
+#for filename in $(ls cfiplist)
+#do
+#  while read line
+#  do
+#  let l++
+#  id=`sed -n "$l p" uuid`
+#  uuid=${id#*: }
+#  work=`sed -n "$l p" workershost`
+#  locate=`sed -n "$l p" iplocate`
+#  if echo $line | grep "峰值速度";then
+#    line="vless://$uuid@www.visa.com.sg:8880?encryption=none&security=none&type=ws&host=$work&path=/?ed=2560#$locate"
+#    echo $line >>v2ray.txt
+#  fi
+#  done < $filename
+#done
+date=$(date "+%Y%m%d")
+wget https://nodefree.githubrowcontent.com/$(date "+%Y")/$(date "+%m")/$date.txt -O v2ray.txt

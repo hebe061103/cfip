@@ -452,6 +452,7 @@ sed -i '1d' iplocate
 bettercloudflareip
 #----------------------------------------------------------------------------------------------
 #开始整理config.yaml配置文件并提取代理合并入文件
+date=$(date "+%Y-%m-%d %H:%M:%S")
 echo --$date-- "开始整理配置文件并提取cloudflare代理" |tee -a /tmp/cf.log
 cp $parm_path/formwork /tmp/newconfig
 for filename in $(ls cfiplist)
@@ -470,10 +471,10 @@ do
   fi
   done < $filename
 done
+date=$(date "+%Y-%m-%d %H:%M:%S")
 echo --$date-- "cloudflare代理提取完成并成功生成配置文件" |tee -a /tmp/cf.log
 mv /tmp/newconfig /tmp/config_cl.yaml
 echo --$date-- "配置文件以生成到:/tmp/config_cl.yaml,更新完成!" |tee -a /tmp/cf.log
-date=$(date "+%Y-%m-%d %H:%M:%S")
 echo --$date-- "------------------------重启CLASH-----------------------------" |tee -a /tmp/cf.log
 rm /root/.config/mihomo/config.yaml
 cp /tmp/config_cl.yaml  /root/.config/mihomo/config.yaml
