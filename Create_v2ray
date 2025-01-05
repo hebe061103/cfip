@@ -11,7 +11,7 @@ do
 		    work=`sed -n "$l p" workershost`
 		    locate=`sed -n "$l p" iplocate`
 		    if echo $line | grep "峰值速度";then
-			    line="vless://$uuid@$ip:8880?encryption=none&security=none&type=ws&host=$work&path=$locate"
+			    line="vless://$uuid@$ip:8880?encryption=none&security=none&type=ws&host=$work&path=%2F%3Fed%3D2560$locate"
 			    echo $line >>v2ray.txt
 		    fi
 		done < $filename
