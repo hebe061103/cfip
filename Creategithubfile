@@ -1,0 +1,58 @@
+#!/bin/bash
+#开始整理config.yaml配置文件并提取代理
+. /etc/profile
+date=$(date "+%Y-%m-%d %H:%M:%S")
+echo --$date-- "------------------------开始同步配置到github-------------------------" |tee -a /tmp/cf.log
+parm_path=$(cd `dirname $0`; pwd)
+cp $parm_path/formwork.update_to_github /tmp/no_dns_config.yaml
+for filename in $(ls cfiplist)
+do
+  while read line
+  do
+  let l++
+  uuid=`sed -n "$l p" uuid`
+  work=`sed -n "$l p" workershost`
+  locate=`sed -n "$l p" iplocate`
+  if echo $line | grep "峰值速度";then
+  a=${line%:*}
+  line="- {name: $locate, server: $a, port: 80, type: vless, $uuid, tls: false, network: ws, ws-opts: {path: '"/?ed=2048"', headers: {Host: $work}}}"
+  sed -i '/以上为代理地址请插入/i\'"  $line"'' /tmp/no_dns_config.yaml
+  sed -i '/以上为节点选择组的自动选择代理请插入/i\'"      - $locate"'' /tmp/no_dns_config.yaml
+  sed -i '/以上为自动选择组下面的代理地址请插入/i\'"      - $locate"'' /tmp/no_dns_config.yaml
+  sed -i '/以上为负载均衡组下面的代理地址请插入/i\'"      - $locate"'' /tmp/no_dns_config.yaml
+  sed -i '/以上为故障转移组下面的代理地址请插入/i\'"      - $locate"'' /tmp/no_dns_config.yaml
+  sed -i '/以上为漏网之鱼组下面的代理地址请插入/i\'"      - $locate"'' /tmp/no_dns_config.yaml
+  fi
+  done < $filename
+done
+cd $parm_path
+cp /tmp/no_dns_config.yaml no_dns_config.yaml
+cp /tmp/config_cl.yaml config_dns_yes.yaml
+while true;
+do
+date=$(date "+%Y-%m-%d %H:%M:%S")
+echo "$date 更新!" > README.md
+#git init
+git add .
+git commit -m "$date"
+repository_address=`git remote -v`
+if [ ! "$repository_address" ]; then
+    git remote add origin https://${GITHUBTOKEN}@github.com/hebe061103/cfip.git
+fi
+result=`git push -u origin master`
+if echo "$result" | grep -e "set up to track";then
+	date=$(date "+%Y-%m-%d %H:%M:%S")
+	echo --$date-- "------------------------同步到github成功-------------------------" |tee -a /tmp/cf.log
+	break
+else
+	let num++
+	date=$(date "+%Y-%m-%d %H:%M:%S")
+	echo --$date-- "------------------------同步失败,开始进行第$num次重试-------------------------" |tee -a /tmp/cf.log
+	sleep 10
+	if [ $num -eq 10 ];then
+		date=$(date "+%Y-%m-%d %H:%M:%S")
+		echo --$date-- "------------------------重试$num次失败,故障退出-------------------------" |tee -a /tmp/cf.log
+		break
+	fi
+fi
+done

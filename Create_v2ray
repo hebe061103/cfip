@@ -1,0 +1,18 @@
+#!/bin/bash
+rm v2ray.txt
+for filename in $(ls cfiplist)
+do
+while read line
+do
+let l++
+id=`sed -n "$l p" uuid`
+uuid=${id#*: }
+ip=${line%%:*}
+work=`sed -n "$l p" workershost`
+locate=`sed -n "$l p" iplocate`
+if echo $line | grep "峰值速度";then
+line="vless://$uuid@$ip:8880?encryption=none&security=none&type=ws&host=$work&path=%2F%3Fed%3D2560#$locate"
+echo $line >>v2ray.txt
+fi
+done < $filename
+done

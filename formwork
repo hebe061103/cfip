@@ -1,0 +1,23 @@
+mixed-port: 7890
+redir-port: 7892
+allow-lan: true
+mode: Rule
+log-level: info
+tcp-concurrent: true
+dns:
+  enable: true
+  enhanced-mode: fake-ip
+  listen: 0.0.0.0:9053
+  fake-ip-range: 12.0.0.0/24
+proxies:
+  # 以上为代理地址请插入
+proxy-groups:
+  - name: 🔮 负载均衡
+    type: load-balance
+    url: http://www.google.com/generate_204
+    interval: 300
+    strategy: consistent-hashing
+    proxies:
+      # 以上为负载均衡下面的代理地址请插入
+rules:
+  - MATCH, 🔮 负载均衡

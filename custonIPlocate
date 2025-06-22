@@ -1,0 +1,498 @@
+#!/bin/bash
+# better-cloudflare-ip
+
+function bettercloudflareip(){
+speed=$[$bandwidth*1024]
+cloudflaretest
+unset temp
+
+if [ $tls == 1 ]
+then
+	echo "支持端口 443 2053 2083 2087 2096 8443"
+else
+	echo "支持端口 80 8080 8880 2052 2082 2086 2095"
+fi
+}
+
+function rtthttps(){
+avgms=0
+n=1
+for ip in `cat rtt/$1.txt`
+do
+	while true
+	do
+		if [ $n -le 3 ]
+		then
+			rsp=$(curl --resolve $domain:443:$ip https://$domain/cdn-cgi/trace -o /dev/null -s --connect-timeout 1 --max-time 3 -w %{time_connect}_%{http_code})
+			if [ $(echo $rsp | awk -F_ '{print $2}') != 200 ]
+			then
+				avgms=0
+				n=1
+				break
+			else
+				avgms=$[$(echo $rsp | awk -F_ '{printf ("%d\n",$1*1000000)}')+$avgms]
+				n=$[$n+1]
+			fi
+		else
+			avgms=$[$avgms/3000]
+			if [ $avgms -lt 10 ]
+			then
+				echo 00$avgms $ip >> rtt/$1.log
+			elif [ $avgms -ge 10 ] && [ $avgms -lt 100 ]
+			then
+				echo 0$avgms $ip >> rtt/$1.log
+			else
+				echo $avgms $ip >> rtt/$1.log
+			fi
+			avgms=0
+			n=1
+			break
+		fi
+	done
+done
+rm -rf rtt/$1.txt
+}
+
+function rtthttp(){
+avgms=0
+n=1
+for ip in `cat rtt/$1.txt`
+do
+	while true
+	do
+		if [ $n -le 3 ]
+		then
+			if [ $(echo $ip | grep : | wc -l) == 0 ]
+			then
+				rsp=$(curl -x $ip:80 http://$domain/cdn-cgi/trace -o /dev/null -s --connect-timeout 1 --max-time 3 -w %{time_connect}_%{http_code})
+			else
+				rsp=$(curl -x [$ip]:80 http://$domain/cdn-cgi/trace -o /dev/null -s --connect-timeout 1 --max-time 3 -w %{time_connect}_%{http_code})
+			fi
+			if [ $(echo $rsp | awk -F_ '{print $2}') != 200 ]
+			then
+				avgms=0
+				n=1
+				break
+			else
+				avgms=$[$(echo $rsp | awk -F_ '{printf ("%d\n",$1*1000000)}')+$avgms]
+				n=$[$n+1]
+			fi
+		else
+			avgms=$[$avgms/3000]
+			if [ $avgms -lt 10 ]
+			then
+				echo 00$avgms $ip >> rtt/$1.log
+			elif [ $avgms -ge 10 ] && [ $avgms -lt 100 ]
+			then
+				echo 0$avgms $ip >> rtt/$1.log
+			else
+				echo $avgms $ip >> rtt/$1.log
+			fi
+			avgms=0
+			n=1
+			break
+		fi
+	done
+done
+rm -rf rtt/$1.txt
+}
+
+function speedtesthttps(){
+rm -rf log.txt speed.txt
+curl --resolve $domain:443:$1 https://$domain/$file -o /dev/null --connect-timeout 1 --max-time 10 > log.txt 2>&1
+cat log.txt | tr '\r' '\n' | awk '{print $NF}' | sed '1,3d;$d' | grep -v 'k\|M' >> speed.txt
+for i in `cat log.txt | tr '\r' '\n' | awk '{print $NF}' | sed '1,3d;$d' | grep k | sed 's/k//g'`
+do
+	k=$i
+	k=$[$k*1024]
+	echo $k >> speed.txt
+done
+for i in `cat log.txt | tr '\r' '\n' | awk '{print $NF}' | sed '1,3d;$d' | grep M | sed 's/M//g'`
+do
+	i=$(echo | awk '{print '$i'*10 }')
+	M=$i
+	M=$[$M*1024*1024/10]
+	echo $M >> speed.txt
+done
+max=0
+for i in `cat speed.txt`
+do
+	if [ $i -ge $max ]
+	then
+		max=$i
+	fi
+done
+rm -rf log.txt speed.txt
+echo $max
+}
+
+function speedtesthttp(){
+rm -rf log.txt speed.txt
+if [ $(echo $1 | grep : | wc -l) == 0 ]
+then
+	curl -x $1:80 http://$domain/$file -o /dev/null --connect-timeout 1 --max-time 10 > log.txt 2>&1
+else
+	curl -x [$1]:80 http://$domain/$file -o /dev/null --connect-timeout 1 --max-time 10 > log.txt 2>&1
+fi
+cat log.txt | tr '\r' '\n' | awk '{print $NF}' | sed '1,3d;$d' | grep -v 'k\|M' >> speed.txt
+for i in `cat log.txt | tr '\r' '\n' | awk '{print $NF}' | sed '1,3d;$d' | grep k | sed 's/k//g'`
+do
+	k=$i
+	k=$[$k*1024]
+	echo $k >> speed.txt
+done
+for i in `cat log.txt | tr '\r' '\n' | awk '{print $NF}' | sed '1,3d;$d' | grep M | sed 's/M//g'`
+do
+	i=$(echo | awk '{print '$i'*10 }')
+	M=$i
+	M=$[$M*1024*1024/10]
+	echo $M >> speed.txt
+done
+max=0
+for i in `cat speed.txt`
+do
+	if [ $i -ge $max ]
+	then
+		max=$i
+	fi
+done
+rm -rf log.txt speed.txt
+echo $max
+}
+
+function cloudflaretest(){
+while true
+do
+	while true
+	do
+		rm -rf rtt rtt.txt log.txt speed.txt
+		if [ ! -d "rtt" ]; then
+                   mkdir rtt
+                fi
+		echo "正在生成 $ips"
+		unset temp
+		if [ "$ips" == "ipv4" ]
+		then
+			n=0
+			iplist=100
+			while true
+			do
+				for i in `awk 'BEGIN{srand()} {print rand()"\t"$0}' $filename | sort -n | awk '{print $2} NR=='$iplist' {exit}' | awk -F\. '{print $1"."$2"."$3}'`
+				do
+					temp[$n]=$(echo $i.$(($RANDOM%256)))
+					n=$[$n+1]
+				done
+				if [ $n -ge $iplist ]
+				then
+					break
+				fi
+			done
+			while true
+			do
+				if [ $(echo ${temp[@]} | sed -e 's/ /\n/g' | sort -u | wc -l) -ge $iplist ]
+				then
+					break
+				else
+					for i in `awk 'BEGIN{srand()} {print rand()"\t"$0}' $filename | sort -n | awk '{print $2} NR=='$[$iplist-$(echo ${temp[@]} | sed -e 's/ /\n/g' | sort -u | wc -l)]' {exit}' | awk -F\. '{print $1"."$2"."$3}'`
+					do
+						temp[$n]=$(echo $i.$(($RANDOM%256)))
+						n=$[$n+1]
+					done
+				fi
+			done
+		else
+			n=0
+			iplist=100
+			while true
+			do
+				for i in `awk 'BEGIN{srand()} {print rand()"\t"$0}' $filename | sort -n | awk '{print $2} NR=='$iplist' {exit}' | awk -F: '{print $1":"$2":"$3}'`
+				do
+					temp[$n]=$(echo $i:$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))))
+					n=$[$n+1]
+				done
+				if [ $n -ge $iplist ]
+				then
+					break
+				fi
+			done
+			while true
+			do
+				if [ $(echo ${temp[@]} | sed -e 's/ /\n/g' | sort -u | wc -l) -ge $iplist ]
+				then
+					break
+				else
+					for i in `awk 'BEGIN{srand()} {print rand()"\t"$0}' $filename | sort -n | awk '{print $2} NR=='$[$iplist-$(echo ${temp[@]} | sed -e 's/ /\n/g' | sort -u | wc -l)]' {exit}' | awk -F: '{print $1":"$2":"$3}'`
+					do
+						temp[$n]=$(echo $i:$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))))
+						n=$[$n+1]
+					done
+				fi
+			done
+		fi
+		ipnum=$(echo ${temp[@]} | sed -e 's/ /\n/g' | sort -u | wc -l)
+		if [ $tasknum == 0 ]
+		then
+			tasknum=1
+		fi
+		if [ $ipnum -lt $tasknum ]
+		then
+			tasknum=$ipnum
+		fi
+		n=1
+		for i in `echo ${temp[@]} | sed -e 's/ /\n/g' | sort -u`
+		do
+			echo $i>>rtt/$n.txt
+			if [ $n == $tasknum ]
+			then
+				n=1
+			else
+				n=$[$n+1]
+			fi
+		done
+		n=1
+		while true
+		do
+			if [ $tls == 1 ]
+			then
+				rtthttps $n &
+			else
+				rtthttp $n &
+			fi
+			if [ $n == $tasknum ]
+			then
+				break
+			else
+				n=$[$n+1]
+			fi
+		done
+		while true
+		do
+			n=$(ls rtt | grep txt | wc -l)
+			if [ $n -ne 0 ]
+			then
+				echo "$(date +'%H:%M:%S') 等待RTT测试结束,剩余进程数 $n"
+			else
+				echo "$(date +'%H:%M:%S') RTT测试完成"
+				break
+			fi
+			sleep 1
+		done
+		n=$(ls rtt | grep log | wc -l)
+		if [ $n == 0 ]
+		then
+			echo "当前所有IP都存在RTT丢包"
+			echo "继续新的RTT测试"
+		else
+			cat rtt/*.log > rtt.txt
+			echo "待测速的IP地址"
+			cat rtt.txt | sort | awk '{print $2" 往返延迟 "$1" 毫秒"}'
+			for i in `cat rtt.txt | sort | awk '{print $1"_"$2}'`
+			do
+				avgms=$(echo $i | awk -F_ '{print $1}')
+				ip=$(echo $i | awk -F_ '{print $2}')
+				echo "正在测试: $ip"
+				if [ $tls == 1 ]
+				then
+					max=$(speedtesthttps $ip)
+				else
+					max=$(speedtesthttp $ip)
+				fi
+				max=$[$max/1024]
+				echo "当前IP速度:$max KB/s"
+				if [ $max -gt $speed ]
+				then
+					anycast=$ip
+					realbandwidth=$[$max/128]
+					avgmsl=$avgms
+					echo "命中优选IP,正在获取归属地"
+					if [ "$ips" == "ipv4" ]
+						then
+							if [ $tls == 1 ]
+							then
+								temp=($(curl --resolve $domain:443:$anycast --retry 1 -s https://$domain/cdn-cgi/trace --connect-timeout 2 --max-time 3))
+							else
+								temp=($(curl -x $anycast:80 --retry 1 -s http://$domain/cdn-cgi/trace --connect-timeout 2 --max-time 3))
+							fi
+						else
+							if [ $tls == 1 ]
+							then
+								temp=($(curl --resolve $domain:443:$anycast --retry 1 -s https://$domain/cdn-cgi/trace --connect-timeout 2 --max-time 3))
+							else
+								temp=($(curl -x $anycast:80 --retry 1 -s http://$domain/cdn-cgi/trace --connect-timeout 2 --max-time 3))
+							fi
+						fi
+						
+					if [ $(echo ${temp[@]} | sed -e 's/ /\n/g' | grep colo= | wc -l) == 0 ]
+						then
+							publicip=获取超时
+							colo=获取超时
+						else
+							publicip=$(echo ${temp[@]} | sed -e 's/ /\n/g' | grep ip= | cut -f 2- -d'=')
+							colo=$(grep -w "($(echo ${temp[@]} | sed -e 's/ /\n/g' | grep colo= | cut -f 2- -d'='))" colo.txt | awk -F"-" '{print $1}')
+						fi
+					    
+					result=$(expr $bandwidth \* 8)
+					echo "IP:$ip|设置带宽 $result Mbps|实测带宽 $realbandwidth Mbps|峰值速度 $max kB/s|往返延迟 $avgmsl 毫秒|数据中心 $colo|公网IP $publicip"
+					iplocate=$(echo "$colo" | grep "${address_locate}")
+					if [[ "$iplocate" != "" ]]
+					then
+					    echo "IP所属位置在:$iplocate"
+					    echo ${iplocate%,*} $ipcfnum >> iplocate
+						echo "$ip:峰值速度$ipcfnum|$max KB/s" |tee -a cfiplist
+						linenum=$(wc -l cfiplist | awk '{print $1}')
+						if [ $linenum -eq $ipsize ]
+						then
+							status=1
+							rm -rf rtt rtt.txt
+							break
+						fi
+						ipcfnum=$((ipcfnum + 1))
+					else
+						echo "IP所属位置在:$colo 非指定地址添加到备选."
+						echo ${colo%,*} $spare_ip_num >> spare_ip_locate
+						echo "$ip:峰值速度$spare_ip_num|$max KB/s" |tee -a spare_ip_list
+						sparenum=$(wc -l spare_ip_list | awk '{print $1}')
+						if [ $sparenum -eq $ipsize ]
+						then
+							rm -rf rtt rtt.txt
+							break
+						fi
+						spare_ip_num=$((spare_ip_num + 1))
+					fi
+				fi
+			done
+			if [[ $status -eq 1 ]]
+			then
+				break
+			else
+				echo "指定区域ip数量不够,追加部分备选ip"
+			    sparenum=$(wc -l spare_ip_list | awk '{print $1}')
+			    if [ $sparenum -eq $ipsize ]
+			    then
+			    	while true
+			    	do
+					    linenum=$(wc -l cfiplist | awk '{print $1}')
+					    if [ $linenum -lt $ipsize ]
+						then
+							let s++
+							echo `sed -n "$s p" spare_ip_locate` >> iplocate
+							echo `sed -n "$s p" spare_ip_list` >> cfiplist
+						else
+							break
+						fi
+					done
+					break
+				else
+					echo "备选ip数量不够,重复ip优选"
+			    fi
+			fi
+		fi
+	done
+	break
+done
+}
+function datacheck(){
+echo "如果这些下面这些文件下载失败,可以手动访问网址下载保存至同级目录"
+echo "https://www.baipiao.eu.org/cloudflare/colo 另存为 colo.txt"
+echo "https://www.baipiao.eu.org/cloudflare/url 另存为 url.txt"
+echo "https://www.baipiao.eu.org/cloudflare/ips-v4 另存为 ips-v4.txt"
+echo "https://www.baipiao.eu.org/cloudflare/ips-v6 另存为 ips-v6.txt"
+while true
+do
+	if [ ! -f "colo.txt" ]
+	then
+		echo "从服务器下载数据中心信息 colo.txt"
+		curl https://www.baipiao.eu.org/cloudflare/colo -o colo.txt
+	elif [ ! -f "url.txt" ]
+	then
+		echo "从服务器下载测速文件地址 url.txt"
+		curl https://www.baipiao.eu.org/cloudflare/url -o url.txt
+	elif [ ! -f "ips-v4.txt" ]
+	then
+		echo "从服务器下载IPV4数据 ips-v4.txt"
+		curl https://www.baipiao.eu.org/cloudflare/ips-v4 -o ips-v4.txt
+	elif [ ! -f "ips-v6.txt" ]
+	then
+		echo "从服务器下载IPV6数据 ips-v6.txt"
+		curl https://www.baipiao.eu.org/cloudflare/ips-v6 -o ips-v6.txt
+	else
+		break
+	fi
+done
+}
+
+#模板文件路径
+parm_path=$(cd `dirname $0`; pwd)
+cd $parm_path
+echo "" > iplocate #清空优选ip位置
+echo "" > spare_ip_locate #清空备选ip位置
+echo "" > cfiplist #清空优选ip地址
+echo "" > spare_ip_list #清空备选ip地址
+clear
+datacheck
+killall -9 mihomodaemon
+killall -9 mihomo
+url=$(sed -n '1p' url.txt)
+domain=$(echo $url | cut -f 1 -d'/')
+file=$(echo $url | cut -f 2- -d'/')
+bandwidth=5  #设置带宽
+tasknum=20   #设置多线程
+ips=ipv4    #设置类型
+filename=ips-v4.txt
+tls=0    #是否使用https
+ipsize=5 #设置要获取的IP数量
+address_locate="Hong Kong" #指定IP区域
+ipcfnum=0 #指定ip区域数量
+spare_ip_num=0 #备选ip区域数量
+echo "缓存已经清空"
+sed -i '1d' spare_ip_list
+sed -i '1d' spare_ip_locate
+sed -i '1d' cfiplist
+sed -i '1d' iplocate
+bettercloudflareip
+#----------------------------------------------------------------------------------------------
+#开始整理config.yaml配置文件并提取代理合并入文件
+date=$(date "+%Y-%m-%d %H:%M:%S")
+echo --$date-- "开始整理配置文件并提取cloudflare代理" |tee -a /tmp/cf.log
+cp $parm_path/formwork /tmp/newconfig
+for filename in $(ls cfiplist)
+do
+  while read line
+  do
+  let l++
+  uuid=`sed -n "$l p" uuid`
+  work=`sed -n "$l p" workershost`
+  locate=`sed -n "$l p" iplocate`
+  if echo $line | grep "峰值速度";then
+  a=${line%:*}
+  line="- {name: $locate, server: $a, port: 80, type: vless, $uuid, tls: false, network: ws, ws-opts: {path: '"/?ed=2048"', headers: {Host: $work}}}"
+  sed -i '/以上为代理地址请插入/i\'"  $line"'' /tmp/newconfig
+  sed -i '/以上为负载均衡下面的代理地址请插入/i\'"      - $locate"'' /tmp/newconfig
+  fi
+  done < $filename
+done
+date=$(date "+%Y-%m-%d %H:%M:%S")
+echo --$date-- "cloudflare代理提取完成并成功生成配置文件" |tee -a /tmp/cf.log
+mv /tmp/newconfig /tmp/config_cl.yaml
+echo --$date-- "配置文件以生成到:/tmp/config_cl.yaml,更新完成!" |tee -a /tmp/cf.log
+echo --$date-- "------------------------重启CLASH-----------------------------" |tee -a /tmp/cf.log
+rm /root/.config/mihomo/config.yaml
+cp /tmp/config_cl.yaml  /root/.config/mihomo/config.yaml
+/usr/bin/killall -9 tmux
+/usr/bin/tmux new-session -d -s cf -n cfw
+/usr/bin/tmux send-keys -t cf:cfw "mihomo" C-m  # 设置tmux窗口自动执行的命令 # 使tmux窗口自动进入attached模式 tmux attach -t mysession
+date=$(date "+%Y-%m-%d %H:%M:%S")
+echo --$date-- "------------------------重启CLASH完成-------------------------" |tee -a /tmp/cf.log
+#执行github同步脚本
+echo --$date-- "------------------------正在生成v2ray地址-------------------------" |tee -a /tmp/cf.log
+$parm_path/Create_v2ray
+echo --$date-- "------------------------等待代理服务稳定-------------------------" |tee -a /tmp/cf.log
+sleep 5
+$parm_path/Creategithubfile
+sleep 10
+$parm_path/mihomodaemon &
+#清除日志内容
+a=$(grep -c "" /tmp/cf.log)
+if [ $a -gt 100 ]; then
+    rm /tmp/cf.log
+fi
