@@ -6,11 +6,11 @@ mode: Rule
 log-level: info
 external-controller: :9090
 proxies:
-  - {name: Hong Kong 0, server: 104.16.6.71, port: 80, type: vless, uuid: cdc1d7d3-fe56-4a38-a724-21308e4393d9, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: empty-rain-1b4a.hebe061103.workers.dev}}}
-  - {name: Hong Kong 1, server: 104.17.194.125, port: 80, type: vless, uuid: 3d2176d3-89b8-40aa-b004-0ff837bed25c, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: gentle-grass-cf96.hebe061103.workers.dev}}}
-  - {name: Hong Kong 2, server: 104.17.194.45, port: 80, type: vless, uuid: 3962565d-e47d-4dd0-aa19-3286e04d9cb6, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: nameless-resonance-6e4c.hebe061103.workers.dev}}}
-  - {name: Hong Kong 3, server: 104.17.194.179, port: 80, type: vless, uuid: 4239d44c-19c7-4b8b-ae07-16607c95b6fb, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: gentle-night-12e3.hebe061103.workers.dev}}}
-  - {name: Hong Kong 4, server: 104.17.194.200, port: 80, type: vless, uuid: 2e632913-bae0-4855-893c-02c828c835a2, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: 56e5.hebe061103.workers.dev}}}
+  - {name: San Jose 0, server: 104.18.143.241, port: 80, type: vless, uuid: cdc1d7d3-fe56-4a38-a724-21308e4393d9, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: empty-rain-1b4a.hebe061103.workers.dev}}}
+  - {name: San Jose 1, server: 104.18.143.30, port: 80, type: vless, uuid: 3d2176d3-89b8-40aa-b004-0ff837bed25c, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: gentle-grass-cf96.hebe061103.workers.dev}}}
+  - {name: San Jose 2, server: 104.18.143.168, port: 80, type: vless, uuid: 3962565d-e47d-4dd0-aa19-3286e04d9cb6, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: nameless-resonance-6e4c.hebe061103.workers.dev}}}
+  - {name: San Jose 3, server: 104.18.143.204, port: 80, type: vless, uuid: 4239d44c-19c7-4b8b-ae07-16607c95b6fb, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: gentle-night-12e3.hebe061103.workers.dev}}}
+  - {name: San Jose 4, server: 104.18.143.230, port: 80, type: vless, uuid: 2e632913-bae0-4855-893c-02c828c835a2, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: 56e5.hebe061103.workers.dev}}}
   # 以上为代理地址请插入
 proxy-groups:
   - name: 🚀 节点选择
@@ -19,22 +19,22 @@ proxy-groups:
       - ♻️  自动选择
       - 🔮 负载均衡
       - 🔯 故障转移
-      - Hong Kong 0
-      - Hong Kong 1
-      - Hong Kong 2
-      - Hong Kong 3
-      - Hong Kong 4
+      - San Jose 0
+      - San Jose 1
+      - San Jose 2
+      - San Jose 3
+      - San Jose 4
       # 以上为节点选择组的自动选择代理请插入
   - name: ♻️  自动选择
     type: url-test
     url: http://www.gstatic.com/generate_204
     interval: 300
     proxies:
-      - Hong Kong 0
-      - Hong Kong 1
-      - Hong Kong 2
-      - Hong Kong 3
-      - Hong Kong 4
+      - San Jose 0
+      - San Jose 1
+      - San Jose 2
+      - San Jose 3
+      - San Jose 4
       # 以上为自动选择组下面的代理地址请插入
   - name: 🔮 负载均衡
     type: load-balance
@@ -42,22 +42,22 @@ proxy-groups:
     url: http://www.gstatic.com/generate_204
     interval: 300
     proxies:
-      - Hong Kong 0
-      - Hong Kong 1
-      - Hong Kong 2
-      - Hong Kong 3
-      - Hong Kong 4
+      - San Jose 0
+      - San Jose 1
+      - San Jose 2
+      - San Jose 3
+      - San Jose 4
       # 以上为负载均衡组下面的代理地址请插入
   - name: 🔯 故障转移
     type: fallback
     url: http://www.gstatic.com/generate_204
     interval: 300
     proxies:
-      - Hong Kong 0
-      - Hong Kong 1
-      - Hong Kong 2
-      - Hong Kong 3
-      - Hong Kong 4
+      - San Jose 0
+      - San Jose 1
+      - San Jose 2
+      - San Jose 3
+      - San Jose 4
       # 以上为故障转移组下面的代理地址请插入
   - name: 🐟 漏网之鱼
     type: select
@@ -65,11 +65,11 @@ proxy-groups:
       - 🚀 节点选择
       - ♻️  自动选择
       - 🔮 负载均衡
-      - Hong Kong 0
-      - Hong Kong 1
-      - Hong Kong 2
-      - Hong Kong 3
-      - Hong Kong 4
+      - San Jose 0
+      - San Jose 1
+      - San Jose 2
+      - San Jose 3
+      - San Jose 4
       # 以上为漏网之鱼组下面的代理地址请插入
 rules:
  - DOMAIN-SUFFIX,xn--ngstr-lra8j.com,🚀 节点选择
