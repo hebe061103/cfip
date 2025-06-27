@@ -14,14 +14,14 @@ dns:
     - 119.29.29.29
     - 114.114.114.114
 proxies:
-  - {name: Hong Kong 0, server: 104.17.194.138, port: 80, type: vless, uuid: cdc1d7d3-fe56-4a38-a724-21308e4393d9, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: empty-rain-1b4a.hebe061103.workers.dev}}}
-  - {name: Hong Kong 1, server: 104.17.194.169, port: 80, type: vless, uuid: 3d2176d3-89b8-40aa-b004-0ff837bed25c, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: gentle-grass-cf96.hebe061103.workers.dev}}}
-  - {name: Hong Kong 2, server: 104.17.194.82, port: 80, type: vless, uuid: 3962565d-e47d-4dd0-aa19-3286e04d9cb6, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: nameless-resonance-6e4c.hebe061103.workers.dev}}}
-  - {name: Hong Kong 3, server: 104.17.194.147, port: 80, type: vless, uuid: 4239d44c-19c7-4b8b-ae07-16607c95b6fb, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: gentle-night-12e3.hebe061103.workers.dev}}}
-  - {name: Hong Kong 4, server: 104.17.194.210, port: 80, type: vless, uuid: 2e632913-bae0-4855-893c-02c828c835a2, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: 56e5.hebe061103.workers.dev}}}
+  - {name: Hong Kong 0, server: 104.16.6.79, port: 80, type: vless, uuid: cdc1d7d3-fe56-4a38-a724-21308e4393d9, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: empty-rain-1b4a.hebe061103.workers.dev}}}
+  - {name: Hong Kong 1, server: 104.17.194.238, port: 80, type: vless, uuid: 3d2176d3-89b8-40aa-b004-0ff837bed25c, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: gentle-grass-cf96.hebe061103.workers.dev}}}
+  - {name: Hong Kong 2, server: 104.17.194.4, port: 80, type: vless, uuid: 3962565d-e47d-4dd0-aa19-3286e04d9cb6, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: nameless-resonance-6e4c.hebe061103.workers.dev}}}
+  - {name: Hong Kong 3, server: 104.16.6.111, port: 80, type: vless, uuid: 4239d44c-19c7-4b8b-ae07-16607c95b6fb, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: gentle-night-12e3.hebe061103.workers.dev}}}
+  - {name: Hong Kong 4, server: 104.17.194.74, port: 80, type: vless, uuid: 2e632913-bae0-4855-893c-02c828c835a2, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: 56e5.hebe061103.workers.dev}}}
   # 以上为代理地址请插入
 proxy-groups:
-  - name: 🔮 负载均衡
+  - name: 🚀 负载均衡
     type: load-balance
     url: http://www.google.com/generate_204
     interval: 300
@@ -34,26 +34,26 @@ proxy-groups:
       - Hong Kong 4
       # 以上为负载均衡下面的代理地址请插入
 rules:
- - DOMAIN-SUFFIX,xn--ngstr-lra8j.com,🔮 负载均衡
- - DOMAIN-SUFFIX,services.googleapis.cn,🔮 负载均衡
- - IP-CIDR,120.232.181.162/32,🔮 负载均衡,no-resolve
- - IP-CIDR,120.241.147.226/32,🔮 负载均衡,no-resolve
- - IP-CIDR,120.253.253.226/32,🔮 负载均衡,no-resolve
- - IP-CIDR,120.253.255.162/32,🔮 负载均衡,no-resolve
- - IP-CIDR,120.253.255.34/32,🔮 负载均衡,no-resolve
- - IP-CIDR,120.253.255.98/32,🔮 负载均衡,no-resolve
- - IP-CIDR,180.163.150.162/32,🔮 负载均衡,no-resolve
- - IP-CIDR,180.163.150.34/32,🔮 负载均衡,no-resolve
- - IP-CIDR,180.163.151.162/32,🔮 负载均衡,no-resolve
- - IP-CIDR,180.163.151.34/32,🔮 负载均衡,no-resolve
- - IP-CIDR,203.208.39.0/24,🔮 负载均衡,no-resolve
- - IP-CIDR,203.208.40.0/24,🔮 负载均衡,no-resolve
- - IP-CIDR,203.208.41.0/24,🔮 负载均衡,no-resolve
- - IP-CIDR,203.208.43.0/24,🔮 负载均衡,no-resolve
- - IP-CIDR,203.208.50.0/24,🔮 负载均衡,no-resolve
- - IP-CIDR,220.181.174.162/32,🔮 负载均衡,no-resolve
- - IP-CIDR,220.181.174.226/32,🔮 负载均衡,no-resolve
- - IP-CIDR,220.181.174.34/32,🔮 负载均衡,no-resolve
+ - DOMAIN,h.zjw.cloudns.be,DIRECT
+ - DOMAIN-SUFFIX,services.googleapis.cn,🚀 节点选择
+ - IP-CIDR,120.232.181.162/32,🚀 节点选择,no-resolve
+ - IP-CIDR,120.241.147.226/32,🚀 节点选择,no-resolve
+ - IP-CIDR,120.253.253.226/32,🚀 节点选择,no-resolve
+ - IP-CIDR,120.253.255.162/32,🚀 节点选择,no-resolve
+ - IP-CIDR,120.253.255.34/32,🚀 节点选择,no-resolve
+ - IP-CIDR,120.253.255.98/32,🚀 节点选择,no-resolve
+ - IP-CIDR,180.163.150.162/32,🚀 节点选择,no-resolve
+ - IP-CIDR,180.163.150.34/32,🚀 节点选择,no-resolve
+ - IP-CIDR,180.163.151.162/32,🚀 节点选择,no-resolve
+ - IP-CIDR,180.163.151.34/32,🚀 节点选择,no-resolve
+ - IP-CIDR,203.208.39.0/24,🚀 节点选择,no-resolve
+ - IP-CIDR,203.208.40.0/24,🚀 节点选择,no-resolve
+ - IP-CIDR,203.208.41.0/24,🚀 节点选择,no-resolve
+ - IP-CIDR,203.208.43.0/24,🚀 节点选择,no-resolve
+ - IP-CIDR,203.208.50.0/24,🚀 节点选择,no-resolve
+ - IP-CIDR,220.181.174.162/32,🚀 节点选择,no-resolve
+ - IP-CIDR,220.181.174.226/32,🚀 节点选择,no-resolve
+ - IP-CIDR,220.181.174.34/32,🚀 节点选择,no-resolve
  - DOMAIN-SUFFIX,acl4.ssr,DIRECT
  - DOMAIN-SUFFIX,ip6-localhost,DIRECT
  - DOMAIN-SUFFIX,ip6-loopback,DIRECT
@@ -312,6 +312,7 @@ rules:
  - DOMAIN-SUFFIX,ksosoft.com,DIRECT
  - DOMAIN-SUFFIX,ksyun.com,DIRECT
  - DOMAIN-SUFFIX,kuaishou.com,DIRECT
+ - DOMAIN-SUFFIX,yximgs.com,DIRECT
  - DOMAIN-SUFFIX,meitu.com,DIRECT
  - DOMAIN-SUFFIX,meitudata.com,DIRECT
  - DOMAIN-SUFFIX,meitustat.com,DIRECT
@@ -792,7 +793,6 @@ rules:
  - DOMAIN-KEYWORD,supersonicads,REJECT
  - DOMAIN-KEYWORD,wlmonitor,REJECT
  - DOMAIN-KEYWORD,zjtoolbar,REJECT
- - DOMAIN-SUFFIX,yximgs.com,REJECT
  - DOMAIN-SUFFIX,09mk.cn,REJECT
  - DOMAIN-SUFFIX,100peng.com,REJECT
  - DOMAIN-SUFFIX,114la.com,REJECT
@@ -8895,5 +8895,5 @@ rules:
  - IP-CIDR,223.255.0.0/17,DIRECT,no-resolve
  - IP-CIDR,223.255.236.0/22,DIRECT,no-resolve
  - IP-CIDR,223.255.252.0/23,DIRECT,no-resolve
- - GEOIP,CN,DIRECT,no-resolve
- - MATCH,🔮 负载均衡
+ - GEOIP,CN,DIRECT
+ - MATCH,🚀 负载均衡
