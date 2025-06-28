@@ -25,25 +25,25 @@ proxy-groups:
       # 以上为负载均衡下面的代理地址请插入
 rules:
  - DOMAIN,h.zjw.cloudns.be,DIRECT
- - DOMAIN-SUFFIX,services.googleapis.cn,🚀 节点选择
- - IP-CIDR,120.232.181.162/32,🚀 节点选择,no-resolve
- - IP-CIDR,120.241.147.226/32,🚀 节点选择,no-resolve
- - IP-CIDR,120.253.253.226/32,🚀 节点选择,no-resolve
- - IP-CIDR,120.253.255.162/32,🚀 节点选择,no-resolve
- - IP-CIDR,120.253.255.34/32,🚀 节点选择,no-resolve
- - IP-CIDR,120.253.255.98/32,🚀 节点选择,no-resolve
- - IP-CIDR,180.163.150.162/32,🚀 节点选择,no-resolve
- - IP-CIDR,180.163.150.34/32,🚀 节点选择,no-resolve
- - IP-CIDR,180.163.151.162/32,🚀 节点选择,no-resolve
- - IP-CIDR,180.163.151.34/32,🚀 节点选择,no-resolve
- - IP-CIDR,203.208.39.0/24,🚀 节点选择,no-resolve
- - IP-CIDR,203.208.40.0/24,🚀 节点选择,no-resolve
- - IP-CIDR,203.208.41.0/24,🚀 节点选择,no-resolve
- - IP-CIDR,203.208.43.0/24,🚀 节点选择,no-resolve
- - IP-CIDR,203.208.50.0/24,🚀 节点选择,no-resolve
- - IP-CIDR,220.181.174.162/32,🚀 节点选择,no-resolve
- - IP-CIDR,220.181.174.226/32,🚀 节点选择,no-resolve
- - IP-CIDR,220.181.174.34/32,🚀 节点选择,no-resolve
+ - DOMAIN-SUFFIX,services.googleapis.cn,🚀 负载均衡
+ - IP-CIDR,120.232.181.162/32,🚀 负载均衡,no-resolve
+ - IP-CIDR,120.241.147.226/32,🚀 负载均衡,no-resolve
+ - IP-CIDR,120.253.253.226/32,🚀 负载均衡,no-resolve
+ - IP-CIDR,120.253.255.162/32,🚀 负载均衡,no-resolve
+ - IP-CIDR,120.253.255.34/32,🚀 负载均衡,no-resolve
+ - IP-CIDR,120.253.255.98/32,🚀 负载均衡,no-resolve
+ - IP-CIDR,180.163.150.162/32,🚀 负载均衡,no-resolve
+ - IP-CIDR,180.163.150.34/32,🚀 负载均衡,no-resolve
+ - IP-CIDR,180.163.151.162/32,🚀 负载均衡,no-resolve
+ - IP-CIDR,180.163.151.34/32,🚀 负载均衡,no-resolve
+ - IP-CIDR,203.208.39.0/24,🚀 负载均衡,no-resolve
+ - IP-CIDR,203.208.40.0/24,🚀 负载均衡,no-resolve
+ - IP-CIDR,203.208.41.0/24,🚀 负载均衡,no-resolve
+ - IP-CIDR,203.208.43.0/24,🚀 负载均衡,no-resolve
+ - IP-CIDR,203.208.50.0/24,🚀 负载均衡,no-resolve
+ - IP-CIDR,220.181.174.162/32,🚀 负载均衡,no-resolve
+ - IP-CIDR,220.181.174.226/32,🚀 负载均衡,no-resolve
+ - IP-CIDR,220.181.174.34/32,🚀 负载均衡,no-resolve
  - DOMAIN-SUFFIX,acl4.ssr,DIRECT
  - DOMAIN-SUFFIX,ip6-localhost,DIRECT
  - DOMAIN-SUFFIX,ip6-loopback,DIRECT

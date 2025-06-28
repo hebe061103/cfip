@@ -6,11 +6,11 @@ mode: Rule
 log-level: info
 external-controller: :9090
 proxies:
-  - {name: Hong Kong 0, server: 104.16.6.79, port: 80, type: vless, uuid: cdc1d7d3-fe56-4a38-a724-21308e4393d9, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: empty-rain-1b4a.hebe061103.workers.dev}}}
-  - {name: Hong Kong 1, server: 104.17.194.238, port: 80, type: vless, uuid: 3d2176d3-89b8-40aa-b004-0ff837bed25c, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: gentle-grass-cf96.hebe061103.workers.dev}}}
-  - {name: Hong Kong 2, server: 104.17.194.4, port: 80, type: vless, uuid: 3962565d-e47d-4dd0-aa19-3286e04d9cb6, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: nameless-resonance-6e4c.hebe061103.workers.dev}}}
-  - {name: Hong Kong 3, server: 104.16.6.111, port: 80, type: vless, uuid: 4239d44c-19c7-4b8b-ae07-16607c95b6fb, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: gentle-night-12e3.hebe061103.workers.dev}}}
-  - {name: Hong Kong 4, server: 104.17.194.74, port: 80, type: vless, uuid: 2e632913-bae0-4855-893c-02c828c835a2, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: 56e5.hebe061103.workers.dev}}}
+  - {name: Hong Kong 0, server: 104.16.6.0, port: 80, type: vless, uuid: cdc1d7d3-fe56-4a38-a724-21308e4393d9, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: empty-rain-1b4a.hebe061103.workers.dev}}}
+  - {name: Hong Kong 1, server: 104.17.194.151, port: 80, type: vless, uuid: 3d2176d3-89b8-40aa-b004-0ff837bed25c, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: gentle-grass-cf96.hebe061103.workers.dev}}}
+  - {name: Hong Kong 2, server: 104.17.194.192, port: 80, type: vless, uuid: 3962565d-e47d-4dd0-aa19-3286e04d9cb6, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: nameless-resonance-6e4c.hebe061103.workers.dev}}}
+  - {name: Hong Kong 3, server: 104.17.194.229, port: 80, type: vless, uuid: 4239d44c-19c7-4b8b-ae07-16607c95b6fb, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: gentle-night-12e3.hebe061103.workers.dev}}}
+  - {name: Hong Kong 4, server: 104.17.194.154, port: 80, type: vless, uuid: 2e632913-bae0-4855-893c-02c828c835a2, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: 56e5.hebe061103.workers.dev}}}
   # 以上为代理地址请插入
 proxy-groups:
   - name: 🚀 节点选择
