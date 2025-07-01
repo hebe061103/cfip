@@ -1,97 +1,73 @@
-port: 7890
-socks-port: 7891
-redir-port: 7892
+mixed-port: 7890
 allow-lan: true
 mode: Rule
 log-level: info
-external-controller: :9090
+tcp-concurrent: true
+global-client-fingerprint: chrome
+tun:
+  enable: true
+  stack: system
+  auto-route: true
+  auto-detect-interface: true
+  dns-hijack:
+    - any:9053
+  strict-route: true
+  mtu: 1500
+dns:
+  enable: true
+  prefer-h3: true
+  listen: :9053
+  enhanced-mode: fake-ip
+  fake-ip-range: 172.16.0.1/16
+  nameserver:
+    - 223.5.5.5
+    - 114.114.114.114
 proxies:
   - {name: Hong Kong 0, server: 104.17.194.168, port: 80, type: vless, uuid: cdc1d7d3-fe56-4a38-a724-21308e4393d9, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: empty-rain-1b4a.hebe061103.workers.dev}}}
   - {name: Hong Kong 1, server: 104.16.6.35, port: 80, type: vless, uuid: 3d2176d3-89b8-40aa-b004-0ff837bed25c, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: gentle-grass-cf96.hebe061103.workers.dev}}}
   - {name: Hong Kong 2, server: 104.17.194.139, port: 80, type: vless, uuid: 3962565d-e47d-4dd0-aa19-3286e04d9cb6, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: nameless-resonance-6e4c.hebe061103.workers.dev}}}
   - {name: Hong Kong 3, server: 104.17.194.172, port: 80, type: vless, uuid: 4239d44c-19c7-4b8b-ae07-16607c95b6fb, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: gentle-night-12e3.hebe061103.workers.dev}}}
   - {name: Hong Kong 4, server: 104.17.194.76, port: 80, type: vless, uuid: 2e632913-bae0-4855-893c-02c828c835a2, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: 56e5.hebe061103.workers.dev}}}
+  - {name: Hong Kong 0, server: 104.17.194.82, port: 80, type: vless, uuid: cdc1d7d3-fe56-4a38-a724-21308e4393d9, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: empty-rain-1b4a.hebe061103.workers.dev}}}
+  - {name: Hong Kong 1, server: 104.17.194.99, port: 80, type: vless, uuid: 3d2176d3-89b8-40aa-b004-0ff837bed25c, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: gentle-grass-cf96.hebe061103.workers.dev}}}
+  - {name: Hong Kong 2, server: 104.16.6.244, port: 80, type: vless, uuid: 3962565d-e47d-4dd0-aa19-3286e04d9cb6, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: nameless-resonance-6e4c.hebe061103.workers.dev}}}
+  - {name: Hong Kong 3, server: 104.17.194.216, port: 80, type: vless, uuid: 4239d44c-19c7-4b8b-ae07-16607c95b6fb, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: gentle-night-12e3.hebe061103.workers.dev}}}
+  - {name: Hong Kong 4, server: 104.17.194.173, port: 80, type: vless, uuid: 2e632913-bae0-4855-893c-02c828c835a2, tls: false, network: ws, ws-opts: {path: '/?ed=2048', headers: {Host: 56e5.hebe061103.workers.dev}}}
   # 以上为代理地址请插入
 proxy-groups:
-  - name: 🚀 节点选择
-    type: select
-    proxies:
-      - ♻️  自动选择
-      - 🔮 负载均衡
-      - 🔯 故障转移
-      - Hong Kong 0
-      - Hong Kong 1
-      - Hong Kong 2
-      - Hong Kong 3
-      - Hong Kong 4
-      # 以上为节点选择组的自动选择代理请插入
-  - name: ♻️  自动选择
-    type: url-test
-    url: http://www.gstatic.com/generate_204
-    interval: 300
-    proxies:
-      - Hong Kong 0
-      - Hong Kong 1
-      - Hong Kong 2
-      - Hong Kong 3
-      - Hong Kong 4
-      # 以上为自动选择组下面的代理地址请插入
-  - name: 🔮 负载均衡
+  - name: 🚀 负载均衡
     type: load-balance
+    url: http://www.google.com/generate_204
+    interval: 300
     strategy: consistent-hashing
-    url: http://www.gstatic.com/generate_204
-    interval: 300
     proxies:
       - Hong Kong 0
       - Hong Kong 1
       - Hong Kong 2
       - Hong Kong 3
       - Hong Kong 4
-      # 以上为负载均衡组下面的代理地址请插入
-  - name: 🔯 故障转移
-    type: fallback
-    url: http://www.gstatic.com/generate_204
-    interval: 300
-    proxies:
-      - Hong Kong 0
-      - Hong Kong 1
-      - Hong Kong 2
-      - Hong Kong 3
-      - Hong Kong 4
-      # 以上为故障转移组下面的代理地址请插入
-  - name: 🐟 漏网之鱼
-    type: select
-    proxies:
-      - 🚀 节点选择
-      - ♻️  自动选择
-      - 🔮 负载均衡
-      - Hong Kong 0
-      - Hong Kong 1
-      - Hong Kong 2
-      - Hong Kong 3
-      - Hong Kong 4
-      # 以上为漏网之鱼组下面的代理地址请插入
+      # 以上为负载均衡下面的代理地址请插入
 rules:
- - DOMAIN-SUFFIX,xn--ngstr-lra8j.com,🚀 节点选择
- - DOMAIN-SUFFIX,services.googleapis.cn,🚀 节点选择
- - IP-CIDR,120.232.181.162/32,🚀 节点选择,no-resolve
- - IP-CIDR,120.241.147.226/32,🚀 节点选择,no-resolve
- - IP-CIDR,120.253.253.226/32,🚀 节点选择,no-resolve
- - IP-CIDR,120.253.255.162/32,🚀 节点选择,no-resolve
- - IP-CIDR,120.253.255.34/32,🚀 节点选择,no-resolve
- - IP-CIDR,120.253.255.98/32,🚀 节点选择,no-resolve
- - IP-CIDR,180.163.150.162/32,🚀 节点选择,no-resolve
- - IP-CIDR,180.163.150.34/32,🚀 节点选择,no-resolve
- - IP-CIDR,180.163.151.162/32,🚀 节点选择,no-resolve
- - IP-CIDR,180.163.151.34/32,🚀 节点选择,no-resolve
- - IP-CIDR,203.208.39.0/24,🚀 节点选择,no-resolve
- - IP-CIDR,203.208.40.0/24,🚀 节点选择,no-resolve
- - IP-CIDR,203.208.41.0/24,🚀 节点选择,no-resolve
- - IP-CIDR,203.208.43.0/24,🚀 节点选择,no-resolve
- - IP-CIDR,203.208.50.0/24,🚀 节点选择,no-resolve
- - IP-CIDR,220.181.174.162/32,🚀 节点选择,no-resolve
- - IP-CIDR,220.181.174.226/32,🚀 节点选择,no-resolve
- - IP-CIDR,220.181.174.34/32,🚀 节点选择,no-resolve
+ - DOMAIN-SUFFIX,xn--ngstr-lra8j.com,🚀 负载均衡
+ - DOMAIN-SUFFIX,services.googleapis.cn,🚀 负载均衡
+ - IP-CIDR,120.232.181.162/32,🚀 负载均衡,no-resolve
+ - IP-CIDR,120.241.147.226/32,🚀 负载均衡,no-resolve
+ - IP-CIDR,120.253.253.226/32,🚀 负载均衡,no-resolve
+ - IP-CIDR,120.253.255.162/32,🚀 负载均衡,no-resolve
+ - IP-CIDR,120.253.255.34/32,🚀 负载均衡,no-resolve
+ - IP-CIDR,120.253.255.98/32,🚀 负载均衡,no-resolve
+ - IP-CIDR,180.163.150.162/32,🚀 负载均衡,no-resolve
+ - IP-CIDR,180.163.150.34/32,🚀 负载均衡,no-resolve
+ - IP-CIDR,180.163.151.162/32,🚀 负载均衡,no-resolve
+ - IP-CIDR,180.163.151.34/32,🚀 负载均衡,no-resolve
+ - IP-CIDR,203.208.39.0/24,🚀 负载均衡,no-resolve
+ - IP-CIDR,203.208.40.0/24,🚀 负载均衡,no-resolve
+ - IP-CIDR,203.208.41.0/24,🚀 负载均衡,no-resolve
+ - IP-CIDR,203.208.43.0/24,🚀 负载均衡,no-resolve
+ - IP-CIDR,203.208.50.0/24,🚀 负载均衡,no-resolve
+ - IP-CIDR,220.181.174.162/32,🚀 负载均衡,no-resolve
+ - IP-CIDR,220.181.174.226/32,🚀 负载均衡,no-resolve
+ - IP-CIDR,220.181.174.34/32,🚀 负载均衡,no-resolve
  - DOMAIN-SUFFIX,acl4.ssr,DIRECT
  - DOMAIN-SUFFIX,ip6-localhost,DIRECT
  - DOMAIN-SUFFIX,ip6-loopback,DIRECT
@@ -8934,4 +8910,4 @@ rules:
  - IP-CIDR,223.255.236.0/22,DIRECT,no-resolve
  - IP-CIDR,223.255.252.0/23,DIRECT,no-resolve
  - GEOIP,CN,DIRECT,no-resolve
- - MATCH,🐟 漏网之鱼
+ - MATCH,🚀 负载均衡
