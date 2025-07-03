@@ -441,7 +441,7 @@ ips=ipv4    #设置类型
 filename=ips-v4.txt
 tls=0    #是否使用https
 ipsize=5 #设置要获取的IP数量
-address_locate="Hong Kong" #指定IP区域
+address_locate="" #指定IP区域
 ipcfnum=0 #指定ip区域数量
 spare_ip_num=0 #备选ip区域数量
 echo "缓存已经清空"
