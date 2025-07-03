@@ -1,7 +1,7 @@
 mixed-port: 7890
 allow-lan: true
 mode: Rule
-ipv6: true
+ipv6: false
 log-level: info
 tcp-concurrent: true
 global-client-fingerprint: chrome
@@ -376,6 +376,7 @@ proxy-groups:
     proxies:
       - REJECT
 rules:
+  - DOMAIN-SUFFIX,serv00.com,🎯 全球直连
   - DOMAIN-SUFFIX,ubuntu.com,🎯 全球直连
   - DOMAIN,api.cloudflare.com,🎯 全球直连
   - DOMAIN,h.zjw.cloudns.be,🎯 全球直连
